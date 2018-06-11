@@ -1,0 +1,370 @@
+<script>
+function reload(element,arg) {
+	location.href = "/en/products/"+arg;
+}
+</script>
+
+</div>
+<!-- first section (produto)-->
+<section id="service-block-main" class="wow fadeInUp section" style="margin-top: -15px">
+	<!-- Container Starts -->
+	<div class="container">
+		<div class="row">        
+			<div class="col-sm-6 col-md-2">
+				<!-- Service-Block-1 Item Starts -->
+				<div class="service-item wow fadeInUpQuick animated" data-wow-delay=".5s">
+					<div class="icon-wrapper">
+						<i class="pulse-shrink">
+							<img src="/assets/img/categories/stew-64.png" width="64" height="64">
+						</i>   
+					</div>
+				</div>
+				<!-- Service-Block-1 Item Ends -->
+			</div>
+
+			<div class="col-sm-6 col-md-2">
+				<!-- Service-Block-1 Item Starts -->
+				<div class="service-item wow fadeInUpQuick animated" data-wow-delay=".8s">
+					<div class="icon-wrapper">
+						<i class="pulse-shrink">
+							<img src="/assets/img/categories/water-64.png" width="64" height="64">
+						</i>   
+					</div>
+				</div>
+				<!-- Service-Block-1 Item Ends -->
+			</div>
+
+			<div class="col-md-4">
+				<h2 class="section-title wow fadeIn animated" data-wow-delay=".2s">
+				 Products
+				</h2>
+			</div>
+
+			<div class="col-sm-6 col-md-2">
+				<!-- Service-Block-1 Item Starts -->
+				<div class="service-item wow fadeInUpQuick animated" data-wow-delay="1.1s">
+					<div class="icon-wrapper">
+						<i class="pulse-shrink">
+							<img src="/assets/img/categories/tea-64.png" width="64" height="64">
+						</i>   
+					</div>
+				</div>
+				<!-- Service-Block-1 Item Ends -->
+			</div>
+
+			<div class="col-sm-6 col-md-2">
+				<!-- Service-Block-1 Item Starts -->
+				<div class="service-item wow fadeInUpQuick animated" data-wow-delay="1.1s">
+					<div class="icon-wrapper">
+						<i class="pulse-shrink">
+							<img src="/assets/img/categories/grain-64.png" width="64" height="64">
+						</i>   
+					</div>
+				</div>
+				<!-- Categories Item Ends -->
+			</div>
+		</div><!-- Row Ends -->
+	</div><!-- Container Ends -->
+</section><!-- Categories Section Ends -->
+
+<div id="navbar-submenu">
+	<section id="produto" class="wow fadeInUp" style="background: white">
+		<form action="/en/products" class="top_search clearfix d-none d-lg-block products" method="post" name="checkout">
+			<nav class="navbar navbar-expand navbar-light">
+				<div class="container">
+					<div class="collapse navbar-collapse navbar-toggleable-sm" id="sub-menu">
+						<!-- Navbar Starts -->
+						<ul class="navbar-nav nav-inline mr-auto">
+							<li class="nav-item dropdown">
+						    	<div class="dropdown-item checkbox-greensea">
+									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+										Food 
+									</a>                    
+								</div>
+								<div class="dropdown-menu">
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="bread" name = "food0" value="BR" {$filter[0] === 'BR' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="bread">
+											Bread
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="chips" name = "food1" value="CI" {$filter[1] === 'CI' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="chips">
+											Chips
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="chocolate" name = "food2" value="CH" {$filter[2] === 'CH' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="chocolate">
+											Chocolate
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="cookie" name="food3" value="CO" {$filter[3] === 'CO' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="cookie">
+											Cookie
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="flour" name="food4" value="FL" {$filter[4] === 'FL' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="flour">
+											Flour
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="fruit" name="food5" value="FR" {$filter[5] === 'FR' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="fruit">
+											Fruit
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="groceries" name="food6" value="GR" {$filter[6] === 'GR' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="groceries">
+											Groceries
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="oil" name="food7" value="OI" {$filter[7] === 'OI' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="oil">
+											Oil
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="pasta" name="food8" value="PA" {$filter[8] === 'PA' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="pasta">
+											Pasta
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="roots" name="food9" value="RO" {$filter[9] === 'RO' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="roots">
+											Roots
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="soup" name="food10" value="SO" {$filter[10] === 'SO' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="soup">
+											Soup
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="spices" name="food11" value="SP" {$filter[11] === 'SP' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="spices">
+											Spices
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" id="sweetner" name="food12" value="SW" {$filter[12] === 'SW' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="sweetner">
+											Sweetner
+										</label>
+									</div>
+								</div>
+							</li>
+
+							<li class="nav-item dropdown">
+						    	<div class="dropdown-item checkbox-greensea">
+									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+										Beverage 
+									</a>
+								</div>
+								<div class="dropdown-menu">
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="CF" id="coffee">
+										<label class="form-check-label" for="coffee">
+											Coffee
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="GU" id="guarana">
+										<label class="form-check-label" for="guarana">
+											Guarana
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="JU" id="juice">
+										<label class="form-check-label" for="juice">
+											Juice
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="MA" id="mate">
+										<label class="form-check-label" for="mate">
+											Mate
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="MI" id="milk">
+										<label class="form-check-label" for="milk">
+											Milk
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="PU" id="pulp">
+										<label class="form-check-label" for="pulp">
+											Pulp
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="TE" id="tea">
+										<label class="form-check-label" for="tea">
+											Tea
+										</label>
+									</div>
+								</div>
+							</li>
+
+							<li class="nav-item dropdown">
+						    	<div class="dropdown-item checkbox-greensea">
+									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+										Special 
+									</a>
+								</div>
+								<div class="dropdown-menu">
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="GF" id="gluten-free">
+										<label class="form-check-label" for="gluten-free">
+											Gluten-free
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="OR" id="organic">
+										<label class="form-check-label" for="organic">
+											Organic
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="YF" id="soy-free">
+										<label class="form-check-label" for="soy-free">
+											Soy-free
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="UF" id="sugar-free">
+										<label class="form-check-label" for="sugar-free">
+											Sugar-free
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="checkbox" value="VE" id="vegan">
+										<label class="form-check-label" for="vegan">
+											Vegan
+										</label>
+									</div>
+								</div>
+							</li>
+
+							<li class="nav-item dropdown">
+						    	<div class="dropdown-item checkbox-greensea">
+									<a class="nav-link dropdown-toggle no-after" data-toggle="dropdown" href="/en/products" role="button" aria-haspopup="true" aria-expanded="false">
+										All 
+									</a>
+								</div>
+							</li>
+						</ul>
+						<ul class="navbar-nav nav-inline ml-0 ml-auto mt-lg-0">
+							<li class="nav-item dropdown">
+						    	<div class="dropdown-item checkbox-greensea">
+									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+									Sort by
+									</a>
+								</div>
+								<div class="dropdown-menu">
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="radio" id="a-z" name="sort" value="AZ" {$sort === 'AZ' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="a-z">
+											A - Z
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea dropdown-item-last">
+<!--
+										<input class="form-check-input" type="radio" value="" id="z-a" name="sort" {$sort === 'za' ? 'checked' : ''} onchange="reload(this,'s/za')">
+-->
+										<input class="form-check-input" type="radio" id="z-a" name="sort" value="ZA" {$sort === 'ZA' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+<!--
+										<input class="form-check-input" type="submit" value="" id="z-a" name="sort" {$sort === 'za' ? 'checked' : ''} formaction="/en/products/" formmethod="post">
+-->
+										<label class="form-check-label" for="z-a">
+											Z - A
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="radio" id="lowest-price" name="sort" value="LP" {$sort === 'LP' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="lowest-price">
+											Price (lowest)
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea dropdown-item-last">
+										<input class="form-check-input" type="radio" id="highest-price" name="sort" value="HP" {$sort === 'HP' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="highest-price">
+											Price (highest)
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea">
+										<input class="form-check-input" type="radio" id="best-seller" name="sort" value="BS" {$sort === 'BS' ? 'checked' : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="best-seller">
+											Best Seller
+										</label>
+									</div>
+									<div class="dropdown-item custom-control custom-checkbox checkbox-greensea dropdown-item-last">
+										<input class="form-check-input" type="radio" id="less-sold" name="sort" value="LS" {$sort === 'LS' ? checked : ''} formaction="/en/products" formmethod="post" onchange="this.form.submit()">
+										<label class="form-check-label" for="less-sold">
+											Less Sold
+										</label>
+									</div>
+								</div>                   
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</form>
+	</section>
+</div>
+
+<div class="noJumpVScroll">
+	<section id="product" class="wow fadeInUp" style="background: white;">
+		<div class="container">
+			<div class="row">
+				{loop="$products"}
+				<div class="col-sm-6 col-md-3">
+					<!-- Product Item Starts -->
+					<div class="product-item wow fadeInUpQuick bg-primary" data-wow-delay="1s">
+						<figure class="product-profile">
+							<a>
+								<img width="256" alt="Acai" src="/assets/img/products/product{$value.idproduct}.jpg">
+							</a>
+							<figcaption class="our-product">
+								<div class="justify-content-center details content-white">
+       								<a href="/product/detail" class="btn-details scrollto">Details</a>
+        							<div class="d-flex justify-content-center social">
+        								<a class="nav-link" href="/#"><i class="fa fa-heart wishlist"></i></a>
+        								<a class="nav-link" href="/cart"><i class="fa fa-shopping-cart cart"></i></a>
+        							</div>
+								</div>
+							</figcaption>
+						</figure>
+						<div class="info">
+							<h3 class="mb-0 pb-0">
+								{$value.nmproduct}
+							</h3>
+							<p>
+								{function="formatEU($value.vlprice)"} € 
+							</p>
+						</div>
+						<div class="info-detail">
+							<div class="orange-line"></div>
+							<p>
+								{$value.dsproductred}
+							</p>
+						</div>
+					</div>
+					<!-- Product Item Ends -->
+				</div>
+				{/loop}
+			</div>
+			<!-- Row Ends -->
+		</div>
+	</section>
+</div>

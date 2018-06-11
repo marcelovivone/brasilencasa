@@ -1,0 +1,21 @@
+{
+    "name": "brasilencasa/ecommerce",
+    "authors": [
+        {
+            "name": "Barcelona Ecommerce of Brazilian Products",
+            "email": "marcelovivone@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tila\\": "vendor\\tila\\php-classes\\src"
+        }
+    },
+    "require": {
+        "slim/slim": "^3.0",
+        "phpmailer/phpmailer": "~6.0",
+        "rain/raintpl": ">=3.0.0",
+        "twbs/bootstrap": "4.1.1",
+        "components/jquery": "^3.3.1"
+    }
+}

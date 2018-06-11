@@ -1,0 +1,28 @@
+{
+  "name": "barcelona",
+  "version": "1.0.0",
+  "description": "Barcelona Ecommerce of Brazilian Products",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcelovivone/barcelona.git"
+  },
+  "author": "Marcelo Janvrot Vivone",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcelovivone/barcelona/issues"
+  },
+  "homepage": "https://github.com/marcelovivone/barcelona#readme",
+  "dependencies": {
+    "bootstrap": "^4.1.1",
+    "jquery": "^3.3.1",
+    "npm-reinstall": "^1.2.1",
+    "package.json": "^2.0.1",
+    "popper": "^1.0.1",
+    "popper.js": "^1.14.3",
+    "reinstall": "^2.0.0"
+  }
+}

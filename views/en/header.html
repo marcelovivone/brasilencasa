@@ -129,32 +129,26 @@
 		<!-- avoid small vertical jump when scrolling -->
 		<div id="navbar">
 			<section id="header">
-				<nav class="navbar navbar-expand-lg navbar-light navbar-menu">
-					<div class="container">
-						<form action='{function="substring($route,0,3)"}/products' class="d-flex col-12 pr-0 pl-0" method="post" name="headerForm">
-							<div class="navbar-brand" id="logo">
-								<h1><a>br-<span>casa</span></a></h1>
-							</div>
+				<form class="form">
+					<nav class="navbar navbar-expand-lg navbar-light">
+						<div class="container">
+							<a class="navbar-brand ml-0 mr-auto" id="logo" href="#"><h1>br-<span>casa</span></h1></a>
 
-							<div class="top_search d-lg-none ml-auto mt-4 ml-0 mr-4 pr-0">
-								<div class="top_search_con">
-									<input class="s" placeholder="Search Here ..." type="text">
-									<span class="top_search_icon"><i class="icon-magnifier"></i></span>
-									<input class="top_search_submit" type="submit">
-								</div>
-							</div>
-							
-							<div class="collapse navbar-collapse navbar-toggleable-sm justify-content-end" id="main-menu">
-								<!-- Navbar Starts -->
-								<ul class="navbar-nav nav-inline mr-0 ml-auto mt-lg-0">
+							<button class="navbar-toggler mr-0 ml-auto" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation" onclick="xxx()">
+								<span class="navbar-toggler-icon"></span>
+							</button>
+
+							<div class="collapse navbar-collapse ml-0 mr-auto" id="main-menu">
+								<ul class="navbar-nav nav-inline ml-auto ml-4 pl-4">
 									<li class="nav-item dropdown">
 										<a class="nav-link active" href='{function="substring($route,0,3)"}' role="button" aria-haspopup="true" aria-expanded="false">Home</a>
 									</li>
-		
+
 									<li class="nav-item dropdown">
 										<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 											Pages
 										</a>
+										
 										<div class="dropdown-menu">
 											<a class="dropdown-item" href='{function="substring($route,0,3)"}/about'>About Us</a>
 											<a class="dropdown-item" href='{function="substring($route,0,3)"}/contact'>Contact Us</a>
@@ -162,18 +156,21 @@
 											<a class="dropdown-item" href='{function="substring($route,0,3)"}/recipes'>Recipes</a>
 											<a class="dropdown-item" href='{function="substring($route,0,3)"}/shop'>Shop</a>
 										</div>
-									</li>             
+									</li>
+				
 									{loop="$menu['category-name']"}	
 									<li class="nav-item dropdown">
 										<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 											{$value1}
 										</a>                    
+										
 										<div class="dropdown-menu">                      
 											<a class="dropdown-item">
 												<button type="submit" class="btn btn-link" id={$value1} name={$value1} value={$menu["category-id"][$key1] . "#"}>
 													All
 												</button>
 											</a>
+						
 											{loop="$menu['subCategory-name'][$key1]"}
 											<a class="dropdown-item">
 												<button type="submit" class="btn btn-link" id={$value2} name={$value2} value={$menu["category-id"][$key1] ."#@". $menu["subCategory-id"][$key1][$key2]}>
@@ -184,34 +181,43 @@
 										</div>
 									</li>
 									{/loop}
+				
 									<li class="nav-item dropdown">
-										<a class="nav-link" href='{function="substring($route,0,3)"}/products' role="button" aria-haspopup="true" aria-expanded="false">All</a>
+										<a class="nav-link" href='{function="substring($route,0,3)"}/products' role="button" aria-haspopup="true" aria-expanded="false">
+											All
+										</a>
 									</li>
 								</ul>
-
-								<div class="top_search d-none d-lg-block col-lg-4 ml-lg-4 mr-lg-0 pr-lg-0">
+		
+	 						</div>
+								<div class="top_search d-none d-lg-block col-lg-3 ml-lg-4 pl-lg-0 pr-lg-0">
 									<div class="top_search_con">
 										<input class="s" placeholder="Search Here ..." type="text">
 										<span class="top_search_icon"><i class="icon-magnifier"></i></span>
 										<input class="top_search_submit" type="submit">
 									</div>
 								</div>
-							</div>
-
-							<button class="navbar-toggler d-lg-none mt-sm-3 mt-md-0 mb-sm-3 mb-md-0" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
-								<span class="navbar-toggler-icon"></span>
-							</button>
-
-						</form>
-						<!-- Form for navbar search area -->
-					</div>
-				</nav>
-				<!-- Navbar Ends -->
+						</div>
+					</nav>
+					<!-- Navbar Ends -->
+				</form>
+				<!-- Form for navbar search area -->
 			</section> 
 			<!-- Roof area Ends -->
 		</div>
 		<!-- </header> -->
-
-		<!-- head in front of body -->
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar-toggler').click(function(){
+  	confirm('oi');
+    $('.nav').toggleClass('nav-view');
+  });
+});
+function xxx() {
+    $('#main-menu').toggleClass('reveal');
+$('#main-menu').addClass('reveal');
+}
+</script>
+  		<!-- head in front of the body -->
 		<!-- avoid small vertical jump when scrolling -->
 		<div class="noJumpVScroll">

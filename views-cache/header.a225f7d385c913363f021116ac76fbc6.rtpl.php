@@ -1,4 +1,4 @@
-<!-- DOCTYPE -->
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!-- DOCTYPE -->
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -57,41 +57,41 @@
 						<!-- Navbar Starts -->
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/contact' style="text-transform: lowercase !important;"><i class="fa fa-envelope"></i> <span class="roof-description">contact@brasilencasa.com</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/contact' style="text-transform: lowercase !important;"><i class="fa fa-envelope"></i> <span class="roof-description">contact@brasilencasa.com</span></a>
 							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-globe"></i>
 									<span class="roof-description">English</span>
 								</a>
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href='/es{function="substring($route,3,20)"}'>Español</a>
-									<a class="dropdown-item" href='/pt{function="substring($route,3,20)"}'>Português</a>
+									<a class="dropdown-item" href='/es<?php echo substring($route,3,20); ?>'>Español</a>
+									<a class="dropdown-item" href='/pt<?php echo substring($route,3,20); ?>'>Português</a>
 								</div>
 							</li>             
 						</ul>
 
 						<ul class="navbar-nav ml-auto">
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
 							</li>                                     
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/wishlist'><i class="fa fa-heart"></i> <span class="roof-description"> Wishlist</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/wishlist'><i class="fa fa-heart"></i> <span class="roof-description"> Wishlist</span></a>
 							</li>                                     
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/cart'><i class="fa fa-shopping-cart"></i> <span class="roof-description"> Cart</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/cart'><i class="fa fa-shopping-cart"></i> <span class="roof-description"> Cart</span></a>
 							</li>                                     
-							{if="checkLogin(false)"}
+							<?php if( checkLogin(false) ){ ?>
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/profile'><i class="fa fa-lock"></i> <span class="roof-description">{function="getUserName()"}</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName(); ?></span></a>
 							</li>                                     
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/logout'><i class="fa fa-close"></i> <span class="roof-description"> Logout</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/logout'><i class="fa fa-close"></i> <span class="roof-description"> Logout</span></a>
 							</li>                                     
-							{else}
+							<?php }else{ ?>
 							<li class="nav-item">
-								<a class="nav-link" href='{function="substring($route,0,3)"}/login'><i class="fa fa-lock"></i> <span class="roof-description">Login</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/login'><i class="fa fa-lock"></i> <span class="roof-description">Login</span></a>
 							</li>
-							{/if}
+							<?php } ?>
 						</ul>
 <!-- português 
 						<ul class="navbar-nav ml-auto">
@@ -104,18 +104,18 @@
 							<li class="nav-item">
 								<a class="nav-link" href="/cart"><i class="fa fa-shopping-cart"></i> <span class="roof-description">Meu Carrinho</span></a>
 							</li>                                     
-							{if="checkLogin(false)"}
+							<?php if( checkLogin(false) ){ ?>
 							<li class="nav-item">
-								<a class="nav-link" href="/profile"><i class="fa fa-lock"></i> <span class="roof-description">{function="getUserName()"}</span></a>
+								<a class="nav-link" href="/profile"><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName(); ?></span></a>
 							</li>                                     
 							<li class="nav-item">
 								<a class="nav-link" href="/logout"><i class="fa fa-close"></i> <span class="roof-description">Sair</span></a>
 							</li>                                     
-							{else}
+							<?php }else{ ?>
 							<li class="nav-item">
 								<a class="nav-link" href="/login"><i class="fa fa-lock"></i> <span class="roof-description">Login</span></a>
 							</li>
-							{/if}
+							<?php } ?>
 						</ul>
 -->
 					</div>
@@ -129,128 +129,95 @@
 		<!-- avoid small vertical jump when scrolling -->
 		<div id="navbar">
 			<section id="header">
-				<nav class="navbar navbar-expand-lg navbar-light navbar-menu">
-					<div class="container">
-						<form action='{function="substring($route,0,3)"}/products' class="d-flex col-12 pr-0 pl-0" method="post" name="headerForm">
-							<div class="navbar-brand" id="logo">
-								<h1><a>br-<span>casa</span></a></h1>
-							</div>
+				<form class="form">
+					<nav class="navbar navbar-expand-lg navbar-light">
+						<div class="container">
+							<a class="navbar-brand ml-0 mr-auto" id="logo" href="#"><h1>br-<span>casa</span></h1></a>
 
-							<div class="top_search d-lg-none ml-auto mt-4 ml-0 mr-4 pr-0">
-								<div class="top_search_con">
-									<input class="s" placeholder="Search Here ..." type="text">
-									<span class="top_search_icon"><i class="icon-magnifier"></i></span>
-									<input class="top_search_submit" type="submit">
-								</div>
-							</div>
-							
-							<div class="collapse navbar-collapse navbar-toggleable-sm justify-content-end" id="main-menu">
-								<!-- Navbar Starts -->
-								<ul class="navbar-nav nav-inline mr-0 ml-auto mt-lg-0">
+							<button class="navbar-toggler mr-0 ml-auto" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation" onclick="xxx()">
+								<span class="navbar-toggler-icon"></span>
+							</button>
+
+							<div class="collapse navbar-collapse ml-0 mr-auto" id="main-menu">
+								<ul class="navbar-nav nav-inline ml-auto ml-4 pl-4">
 									<li class="nav-item dropdown">
-										<a class="nav-link active" href='{function="substring($route,0,3)"}' role="button" aria-haspopup="true" aria-expanded="false">Home</a>
+										<a class="nav-link active" href='<?php echo substring($route,0,3); ?>' role="button" aria-haspopup="true" aria-expanded="false">Home</a>
 									</li>
-		
+
 									<li class="nav-item dropdown">
 										<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 											Pages
 										</a>
+										
 										<div class="dropdown-menu">
-											<a class="dropdown-item" href='{function="substring($route,0,3)"}/about'>About Us</a>
-											<a class="dropdown-item" href='{function="substring($route,0,3)"}/contact'>Contact Us</a>
-											<a class="dropdown-item" href='{function="substring($route,0,3)"}/products'>Products</a>
-											<a class="dropdown-item" href='{function="substring($route,0,3)"}/recipes'>Recipes</a>
-											<a class="dropdown-item" href='{function="substring($route,0,3)"}/shop'>Shop</a>
+											<a class="dropdown-item" href='<?php echo substring($route,0,3); ?>/about'>About Us</a>
+											<a class="dropdown-item" href='<?php echo substring($route,0,3); ?>/contact'>Contact Us</a>
+											<a class="dropdown-item" href='<?php echo substring($route,0,3); ?>/products'>Products</a>
+											<a class="dropdown-item" href='<?php echo substring($route,0,3); ?>/recipes'>Recipes</a>
+											<a class="dropdown-item" href='<?php echo substring($route,0,3); ?>/shop'>Shop</a>
 										</div>
-									</li>             
-									{loop="$menu['category-name']"}	
+									</li>
+				
+									<?php $counter1=-1;  if( isset($menu['category-name']) && ( is_array($menu['category-name']) || $menu['category-name'] instanceof Traversable ) && sizeof($menu['category-name']) ) foreach( $menu['category-name'] as $key1 => $value1 ){ $counter1++; ?>	
 									<li class="nav-item dropdown">
 										<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-											{$value1}
+											<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>
 										</a>                    
+										
 										<div class="dropdown-menu">                      
 											<a class="dropdown-item">
-												<button type="submit" class="btn btn-link" id={$value1} name={$value1} value={$menu["category-id"][$key1] . "#"}>
+												<button type="submit" class="btn btn-link" id=<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?> name=<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?> value=<?php echo htmlspecialchars( $menu["category-id"]["$key1"] . "#", ENT_COMPAT, 'UTF-8', FALSE ); ?>>
 													All
 												</button>
 											</a>
-											{loop="$menu['subCategory-name'][$key1]"}
+						
+											<?php $counter2=-1;  if( isset($menu['subCategory-name']["$key1"]) && ( is_array($menu['subCategory-name']["$key1"]) || $menu['subCategory-name']["$key1"] instanceof Traversable ) && sizeof($menu['subCategory-name']["$key1"]) ) foreach( $menu['subCategory-name']["$key1"] as $key2 => $value2 ){ $counter2++; ?>
 											<a class="dropdown-item">
-												<button type="submit" class="btn btn-link" id={$value2} name={$value2} value={$menu["category-id"][$key1] ."#@". $menu["subCategory-id"][$key1][$key2]}>
-													{$value2}
+												<button type="submit" class="btn btn-link" id=<?php echo htmlspecialchars( $value2, ENT_COMPAT, 'UTF-8', FALSE ); ?> name=<?php echo htmlspecialchars( $value2, ENT_COMPAT, 'UTF-8', FALSE ); ?> value=<?php echo htmlspecialchars( $menu["category-id"]["$key1"] ."#@". $menu["subCategory-id"]["$key1"]["$key2"], ENT_COMPAT, 'UTF-8', FALSE ); ?>>
+													<?php echo htmlspecialchars( $value2, ENT_COMPAT, 'UTF-8', FALSE ); ?>
 												</button>
 											</a>
-											{/loop}
+											<?php } ?>
 										</div>
 									</li>
-									{/loop}
+									<?php } ?>
+				
 									<li class="nav-item dropdown">
-										<a class="nav-link" href='{function="substring($route,0,3)"}/products' role="button" aria-haspopup="true" aria-expanded="false">All</a>
+										<a class="nav-link" href='<?php echo substring($route,0,3); ?>/products' role="button" aria-haspopup="true" aria-expanded="false">
+											All
+										</a>
 									</li>
 								</ul>
-
-								<div class="top_search d-none d-lg-block col-lg-4 ml-lg-4 mr-lg-0 pr-lg-0">
+		
+	 						</div>
+								<div class="top_search d-none d-lg-block col-lg-3 ml-lg-4 pl-lg-0 pr-lg-0">
 									<div class="top_search_con">
 										<input class="s" placeholder="Search Here ..." type="text">
 										<span class="top_search_icon"><i class="icon-magnifier"></i></span>
 										<input class="top_search_submit" type="submit">
 									</div>
 								</div>
-							</div>
-
-							<button class="navbar-toggler d-lg-none mt-sm-3 mt-md-0 mb-sm-3 mb-md-0" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
-								<span class="navbar-toggler-icon"></span>
-							</button>
-
-						</form>
-						<!-- Form for navbar search area -->
-					</div>
-				</nav>
-				<!-- Navbar Ends -->
+						</div>
+					</nav>
+					<!-- Navbar Ends -->
+				</form>
+				<!-- Form for navbar search area -->
 			</section> 
 			<!-- Roof area Ends -->
 		</div>
 		<!-- </header> -->
-
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
-
-
-
-  		<!-- head in front of body -->
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar-toggler').click(function(){
+  	confirm('oi');
+    $('.nav').toggleClass('nav-view');
+  });
+});
+function xxx() {
+    $('#main-menu').toggleClass('reveal');
+$('#main-menu').addClass('reveal');
+}
+</script>
+  		<!-- head in front of the body -->
 		<!-- avoid small vertical jump when scrolling -->
 		<div class="noJumpVScroll">

@@ -178,11 +178,6 @@ li.search .open-search i {
 /* Nav bar - Begin */
 
 @media screen and (max-width: 768px) {
-  .nav-inline .nav-item + .nav-item {
-    margin-left: 0;
-    float: none;
-  }
-
   nav.navbar.navbar-light button.navbar-toggler {
     background: inherit none repeat scroll 0 0;
     border-radius: 0 !important;
@@ -198,16 +193,28 @@ li.search .open-search i {
   }
 
   nav.navbar.navbar-light .navbar-toggler:hover {
-    outline: none;
+/*    outline: none;
     -webkit-transform: scale(1.08);
     -moz-transition: scale(1.08);
     -ms-transition: scale(1.08);
     -0-transition: scale(1.08);
     transform: scale(1.08);
-  }
+*/  }
 
-  nav.navbar.navbar-light .navbar-toggler:focus .navbar-toggler-icon {
-  /*  background: #0c9d80 !important; */
+
+.box-shadow{
+  background: 0px 0px 550px 220px rgba(128,128,128, 0.5);
+    -moz-box-shadow: 3px 3px 4px #ccc;
+    -webkit-box-shadow: 3px 3px 4px #ccc;
+    box-shadow: 3px 3px 4px #ccc; /* For IE 8 */
+ }
+  body! ~ nav.navbar.navbar-light .navbar-toggler:hover {
+
+  background: rgba(0, 0, 0, 0.6);
+  transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
   }
 
   nav.navbar.navbar-light .navbar-toggler .navbar-toggler-icon {
@@ -215,27 +222,66 @@ li.search .open-search i {
     margin-top: -3px;
     padding: 0;
   }
+}
+
+@media (max-width: 768px) {
+  #main-menu {
+    position: absolute;
+    top: 10.8vh;
+    left: 0;
+    padding-left: 0px;
+    width: 100%;
+  }
+
+  #main-menu.collapsing {
+    height: auto;
+    -webkit-transition: left 0.1s ease;
+    -o-transition: left 0.1s ease;
+    -moz-transition: left 0.1s ease;
+    transition: left 0.1s ease;
+    left: -100%;
+  }
+
+  #main-menu.show {
+    left: 0;
+    -webkit-transition: left 0.1s ease-in;
+    -o-transition: left 0.1s ease-in;
+    -moz-transition: left 0.1s ease-in;
+    transition: left 0.1s ease-in;
+  }
+
+  .reveal {
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+    -webkit-transition: 300ms ease;
+    transition: 300ms ease;
+  }
+
+  nav.navbar.navbar-light .nav-inline {
+    height: auto;
+    max-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  nav.navbar.navbar-light ul.nav-inline {
+    height: auto;
+    overflow-y: visible;
+    width: 65%;
+    background-color: #fff;
+    left: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
 
   nav.navbar.navbar-light ul.nav-inline .nav-item {
     display: block;
-  }
-
-  nav.navbar.navbar-light ul.nav-inline .nav-item {
     border-bottom: 1px solid #e4e4e4;
   }
 
-  nav.navbar.navbar-light ul.nav-inline {
-    max-height: 350px;
-    margin-top: 20px;
+  .nav-inline .nav-item + .nav-item {
+    margin-left: 0;
   }
-
-  nav.navbar.navbar-light ul.nav-inline {
-    overflow-x: scroll;
-  }
-}
-
-#default-tab a.nav-link {
-  background: none;
 }
 
 .dropdown-item.active, .dropdown-item.active:focus, .dropdown-item.active:hover {
@@ -519,6 +565,11 @@ ul .dropdown .dropdown-menu a {
     font-size: 12px;
     padding: 18px 10px;
   }
+
+  #main-menu ul > li > div {
+    width: 100% !important;
+  }
+
 }
 
 @media (min-width: 769px) {
@@ -693,7 +744,7 @@ ul .dropdown .dropdown-menu a {
 
 @media (min-width: 769px) {
   #sub-menu ul .dropdown .dropdown-menu {
-    display:cnone
+/*mjv*/    display:none;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   }
 
@@ -750,7 +801,7 @@ ul .dropdown .dropdown-menu a {
 }
 
 @media (max-width: 1024px) {
-#sub-menu ul .dropdown .sort {
+  #sub-menu ul .dropdown .sort {
     left: -2px;
   }
 }
@@ -1435,6 +1486,7 @@ button {
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
 
+/* mjv - modifica */
 #header #logo h1 {
   margin: 0;
   padding: 0;
@@ -1443,12 +1495,16 @@ button {
   font-weight: 700;
 }
 
-#header #logo h1 a {
+/* mjv - modifica */
+#header #logo h1 a,
+#header #logo h1 {
   color: #0c2e8a;
   line-height: 1;
   display: inline-block;
 }
 
+/* mjv - modifica */
+#header #logo h1 span, 
 #header #logo h1 a span {
   color: #50d8af;
 }
@@ -1460,12 +1516,16 @@ button {
   }
 
   #header #logo h1 {
-    margin-top: 12px;
+    margin-top: 2px;
     font-size: 34px;
   }
 
   #header #logo img {
     max-height: 40px;
+  }
+
+  #main-menu form {
+     width: 71%;
   }
 }
 
@@ -1490,7 +1550,11 @@ button {
 @media screen and (max-width: 639px) {
   h1 {
     font-size: 33px;
-    margin-top: -13px !important;
+  }
+
+  #roof .fa-envelope, 
+  #navbar .navbar-brand {
+    margin-left: 1vh !important;
   }
 }
 
@@ -1558,8 +1622,6 @@ ul li.active > div > label {
 
 @media (min-width: 769px) {
   .navbar-brand {
-    width: 130px;
-    padding-top: 0.8rem;
     height: auto;
   }
 }
@@ -1567,23 +1629,19 @@ ul li.active > div > label {
 @media screen and (max-width: 768px) {
   .navbar-brand {
     position: absolute;
-    padding-top: 0.9rem; 
+    padding-top: 17px; 
     top: 0;
   }
-  /* #menu is the original menu */
-  #wpb-mobile-menu {
-    display: none;
-  }
+
   .slicknav_menu {
     display: block;
   }
-}
-/* SlickMenu responsive */
-@media screen and (max-width: 768px) {
+
   .navbar-toggle {
     display: none;
   }
 }
+
 .top_search .top_search_con {
   background: #fff;
   border: 1px solid #E4E4E4 !important;
@@ -1592,6 +1650,7 @@ ul li.active > div > label {
   position: relative;
   width: 100%;
 }
+
 .top_search .top_search_con input[type="text"],
 .top_search .top_search_con input:focus {
   background: none !important;
@@ -1603,12 +1662,14 @@ ul li.active > div > label {
   font-size: 12px;
   outline: none;
 }
+
 .top_search .top_search_icon {
   font-size: 14px;
   left: 15px;
   position: absolute;
   top: 7px;
 }
+
 .top_search .top_search_submit {
   border: medium none;
   padding: 0;
@@ -3554,138 +3615,6 @@ ul.contact-info2 i.fa {
   background: rgba(0, 0, 0, 0.47);
 }*/
 /* Tablet Layout: 768px. */
-@media only screen and (min-width: 768px) and (max-width: 991px) { 
-  #main-menu ul > li > a {
-/*    font-size: 10px; */
-    font-size: 12px;
-    font-weight: 400;
-    padding: 28px 8px;
-  }
-  #main-menu ul .dropdown .dropdown-menu a {
-    border-top: 1px solid #e2e6e7;
-    color: #666;
-    display: block;
-/*
-    font-size: 30px;
-    font-weight: 400;
-*/ 
-    height: auto;
-    line-height: 16px;
-    padding: 9px 19px 7px;
-    transition: all 0.3s ease-in-out 0s;
-  }
- 
-/*  #sub-menu ul > li > div > label { */
-  #sub-menu ul .dropdown .dropdown-menu a {
-/*    font-size: 10px; */
-    font-size: 12px;
-    font-weight: 400;
-    padding: 28px 8px;
-/*  }
-  #sub-menu ul .dropdown .dropdown-menu label { */
-    border-top: 1px solid #e2e6e7;
-    color: #666;
-    display: block;
-/*
-    font-size: 30px;
-    font-weight: 400;
-*/ 
-    height: auto;
-    line-height: 16px;
-    padding: 9px 19px 7px;
-    transition: all 0.3s ease-in-out 0s;
-  }
- 
-  #carousel-area .carousel-item .carousel-caption h2 {
-    font-size: 50px;
-  }
-  #carousel-area .carousel-item .carousel-caption h3 {
-    font-size: 20px;
-  }
-  #carousel-area img {
-    height: 100%;
-  }
-  .service-item h2 {
-    font-size: 15px !important;
-  }
-/*  .top_search {
-    display: none;
-  }  
-*/  .pricing-table-x .plan-info p {
-    font-size: 12px;
-  }
-  #team .team-item figure figcaption .content-white {
-    font-size: 9px;
-    line-height: 12px;
-    width: 60%;
-  }
-  #team .team-item .social .facebook, #team .team-item .social .twitter, #team .team-item .social .google-plus {
-    font-size: 8px;
-    height: 25px;
-    line-height: 25px;
-    width: 25px;
-  }
-  /*.section-title {
-    font-size: 24px !important;
-  }*/
-  .footer-widget p {
-    font-size: 12px;
-  }
-  .social-footer a .fa {
-    height: 25px;
-    line-height: 25px;
-    width: 25px;
-  }
-  footer .plain-flicker-gallery a {
-    width: 31%;
-  }
-  footer ul li.tweet {
-    font-size: 12px !important;
-  }
-  #copyright p, #copyright a {
-    font-size: 10px !important;
-  }
-  .single-pricing-2 .btn {
-    padding: 10px 15px;
-    font-size: 10px;
-  }
-  .single-pricing-2 .plan-price {
-    font-size: 35px;
-  }
-  .single-pricing-2 ul li {
-    font-size: 12px;
-  }
-  ul.nav-tabs li a {
-    font-size: 11px;
-  }
-  .btn-lg {
-    padding: 12px 20px;
-  }
-  .btn-md {
-    padding: 12px 14px;
-  }
-  .pricing-table h3 {
-    font-size: 24px !important;
-  }
-  .single-pricing-2 .plan-name {
-    font-size: 18px;
-  }
-  .sup-desc-wrap .sup-meta-wrap .sup-description {
-    display: none;
-  }
-  span.published-time {
-    font-size: 10px;
-  }
-  .widget.popular-post h4 {
-    font-size: 12px;
-  }
-  .flickr-widget .plain-flicker-gallery a img {
-    width: 31%;
-  }
-  .widget.tag-cloud a {
-    font-size: 8px;
-  }
-}
 
 @media screen and (max-width: 768px) {
   .page-header-content h2 {
@@ -4100,9 +4029,9 @@ ul.contact-info2 i.fa {
   transform: translateY(15px);
 }
 #product .product-item figure figcaption .details {
-	position: absolute;
-	top: 20%;
-	left: 22%;
+  position: absolute;
+  top: 20%;
+  left: 22%;
 }
 #product .product-item figure figcaption div .btn-details, 
 #product .product-item figure figcaption div .btn-detailx {
@@ -4292,65 +4221,126 @@ body {
 
 
 
-/*
-A Bootstrap 3.1 affix sidebar template
-from http://bootply.com
 
-This CSS code should follow the 'bootstrap.css'
-in your HTML file.
 
-license: MIT
-author: bootply.com
-*/
 
-body {
- padding-top:50px;
+
+
+
+
+
+
+
+
+
+
+/* Mobile Nav Toggle */
+#mobile-nav-toggle {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 999;
+  margin: 20px 20px 0 0;
+  border: 0;
+  background: none;
+  font-size: 24px;
+  display: none;
+  transition: all 0.4s;
+  outline: none;
+  cursor: pointer;
 }
 
-#masthead { 
- min-height:250px;
+#mobile-nav-toggle i {
+  color: #555;
 }
 
-#masthead h1 {
- font-size: 30px;
- line-height: 1;
- padding-top:20px;
-}
-
-#masthead .well {
- margin-top:8%;
-}
-
-@media screen and (min-width: 768px) {
-  #masthead h1 {
-    font-size: 50px;
+@media (max-width: 768px) {
+  #mobile-nav-toggle {
+    display: inline;
   }
 }
 
-.navbar-bright {
- background-color:#111155;
- color:#fff;
+/* Mobile Nav Styling */
+#mobile-nav {
+  position: fixed;
+  top: 0;
+  padding-top: 18px;
+  bottom: 0;
+  z-index: 998;
+  background: rgba(52, 59, 64, 0.9);
+  left: -260px;
+  width: 260px;
+  overflow-y: auto;
+  transition: 0.4s;
 }
 
-.affix-top,.affix{
- position: static;
+#mobile-nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-@media (min-width: 979px) {
-  #sidebar.affix-top {
-    position: static;
-      margin-top:30px;
-    width:228px;
-  }
-  
-  #sidebar.affix {
-    position: fixed;
-    top:70px;
-    width:228px;
-  }
+#mobile-nav ul li {
+  position: relative;
 }
 
-#sidebar li.active {
-  border:0 #eee solid;
-  border-right-width:5px;
+#mobile-nav ul li a {
+  color: #fff;
+  font-size: 16px;
+  overflow: hidden;
+  padding: 10px 22px 10px 15px;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+  display: block;
+  outline: none;
+}
+
+#mobile-nav ul li a:hover {
+  color: #fff;
+}
+
+#mobile-nav ul li li {
+  padding-left: 30px;
+}
+
+#mobile-nav ul .menu-has-children i {
+  position: absolute;
+  right: 0;
+  z-index: 99;
+  padding: 15px;
+  cursor: pointer;
+  color: #fff;
+}
+
+#mobile-nav ul .menu-has-children i.fa-chevron-up {
+  color: #50d8af;
+}
+
+#mobile-nav ul .menu-item-active {
+  color: #50d8af;
+}
+
+#mobile-body-overly {
+  width: 100%;
+  height: 100%;
+  z-index: 997;
+  top: 0;
+  left: 0;
+  position: fixed;
+  background: rgba(52, 59, 64, 0.9);
+  display: none;
+}
+
+/* Mobile Nav body classes */
+body.mobile-nav-active {
+  overflow: hidden;
+}
+
+body.mobile-nav-active #mobile-nav {
+  left: 0;
+}
+
+body.mobile-nav-active #mobile-nav-toggle {
+  color: #fff;
 }

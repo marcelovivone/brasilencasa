@@ -73,12 +73,12 @@ function arrayLoad(&$array, $arrayDim = "", $list, $listItem = "") :array {
 }
 
 
-	function substring($str, $start, $lenght){
-		return substr($str, $start, $lenght);
-	}
+function substring($str, $start, $lenght){
+	return substr($str, $start, $lenght);
+}
 
-	function lenght($str){
-		return strlen($str);
-	}
+function strPad($str){
+	return str_pad($str, 26 - strlen($str), "&nbsp");
+}
 
 ?>

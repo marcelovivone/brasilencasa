@@ -131,15 +131,15 @@
 			<section id="header">
 				<form class="form">
 					<nav class="navbar navbar-expand-lg navbar-light">
-						<div class="container">
+						<div class="container mt-sm-4 pt-sm-4 my-sm-4 mt-lg-0 pt-lg-0 my-lg-0">
 							<a class="navbar-brand ml-0 mr-auto" id="logo" href="#"><h1>br-<span>casa</span></h1></a>
-
-							<button class="navbar-toggler mr-0 ml-auto" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation" onclick="xxx()">
+<!--
+							<button class="navbar-toggler mr-0 ml-auto" type="button" id="mobile-nav-toggle" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation" onclick="xxx()">
 								<span class="navbar-toggler-icon"></span>
 							</button>
-
+-->
 							<div class="collapse navbar-collapse ml-0 mr-auto" id="main-menu">
-								<ul class="navbar-nav nav-inline ml-auto ml-4 pl-4">
+								<ul class="navbar-nav nav-inline ml-auto ml-4 pl-4" id="navbar-nav">
 									<li class="nav-item dropdown">
 										<a class="nav-link active" href='{function="substring($route,0,3)"}' role="button" aria-haspopup="true" aria-expanded="false">Home</a>
 									</li>
@@ -164,7 +164,7 @@
 											{$value1}
 										</a>                    
 										
-										<div class="dropdown-menu">                      
+										<div class="dropdown-menu">
 											<a class="dropdown-item">
 												<button type="submit" class="btn btn-link" id={$value1} name={$value1} value={$menu["category-id"][$key1] . "#"}>
 													All
@@ -183,20 +183,20 @@
 									{/loop}
 				
 									<li class="nav-item dropdown">
-										<a class="nav-link" href='{function="substring($route,0,3)"}/products' role="button" aria-haspopup="true" aria-expanded="false">
+										<a class="nav-link last" href='{function="substring($route,0,3)"}/products' role="button" aria-haspopup="true" aria-expanded="false">
 											All
 										</a>
 									</li>
 								</ul>
+							</div>
 		
-	 						</div>
-								<div class="top_search d-none d-lg-block col-lg-3 ml-lg-4 pl-lg-0 pr-lg-0">
-									<div class="top_search_con">
-										<input class="s" placeholder="Search Here ..." type="text">
-										<span class="top_search_icon"><i class="icon-magnifier"></i></span>
-										<input class="top_search_submit" type="submit">
-									</div>
+							<div class="top_search d-none d-lg-block col-lg-3 ml-lg-4 pl-lg-0 pr-lg-0">
+								<div class="top_search_con">
+									<input class="s" placeholder="Search Here ..." type="text">
+									<span class="top_search_icon"><i class="icon-magnifier"></i></span>
+									<input class="top_search_submit" type="submit">
 								</div>
+							</div>
 						</div>
 					</nav>
 					<!-- Navbar Ends -->
@@ -206,17 +206,37 @@
 			<!-- Roof area Ends -->
 		</div>
 		<!-- </header> -->
+
 <script type="text/javascript">
-$(document).ready(function(){
-  $('.navbar-toggler').click(function(){
-  	confirm('oi');
-    $('.nav').toggleClass('nav-view');
-  });
-});
-function xxx() {
-    $('#main-menu').toggleClass('reveal');
-$('#main-menu').addClass('reveal');
-}
+
+	function xxx() {
+//$( "body" ).css("background", "#000");
+
+/*	var x = 56;
+    var y = 78;
+    var z = 92;
+    var t = 0.15;
+    var thergb = "rgb(" + x + "," + y + "," + z + "," + t + ")"; 
+    document.body.style.background=thergb;
+    $("#navbar").css("background", thergb);
+    $("#portfolio").css("background", thergb);
+    $("body").addClass("box-shadow");
+    $(".box-shadow").css("z-index", "999999999999999999999");
+*/
+    var $mobile_nav = $('#main-menu').clone().prop({
+      id: 'mobile-nav'
+    });
+
+	$('body').append('<div id="mobile-body-overly"></div>');
+    $('body').toggleClass('mobile-nav-active');
+    $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+    $('#mobile-body-overly').toggle();
+
+	}
+
+
+
+
 </script>
   		<!-- head in front of the body -->
 		<!-- avoid small vertical jump when scrolling -->

@@ -9,10 +9,6 @@
 			Brasil en Casa
 		</title>
 		<!-- Bootstrap -->
-<!--    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css"> -->
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-<!--		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
--->
 		<link href="/vendor/twbs/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
 		
 		<!-- Main Style -->
@@ -21,14 +17,13 @@
 		<link rel="stylesheet" type="text/css" href="/assets/css/responsive.css">
 		<!--Fonts-->
 		
-		<!-- <link rel="stylesheet" media="screen" href="/assets/fonts/font-awesome/font-awesome.min.css"> -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<!--		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+-->		<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.5.0.13.min.css">
 
 		<link rel="stylesheet" media="screen" href="/assets/fonts/simple-line-icons.css">    
 		 
 		<!-- Extras -->
 		<link rel="stylesheet" type="text/css" href="/assets/extras/owl/owl.carousel.css">
-<!--    <link rel="stylesheet" type="text/css" href="/assets/extras/owl/owl.theme.css"> -->
 		<link rel="stylesheet" type="text/css" href="/assets/extras/owl/owl.theme.default.css">
 		<link rel="stylesheet" type="text/css" href="/assets/extras/animate.css">
 		<link rel="stylesheet" type="text/css" href="/assets/extras/normalize.css">
@@ -36,14 +31,6 @@
 
 		<!-- Color CSS Styles  -->
 		<link rel="stylesheet" type="text/css" href="/assets/css/colors/greensea.css" media="screen" />       
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js">
-		</script>
-		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js">
-		</script>
-		<![endif]-->
-
 	</head>
 
 	<body>
@@ -129,9 +116,9 @@
 		<!-- avoid small vertical jump when scrolling -->
 		<div id="navbar">
 			<section id="header">
-				<form class="form">
+				<form class="form" action='{function="substring($route,0,3)"}/products' method="post" id="formHeader">
 					<nav class="navbar navbar-expand-lg navbar-light">
-						<div class="container mt-sm-4 pt-sm-4 my-sm-4 mt-lg-0 pt-lg-0 my-lg-0">
+						<div class="container mt-xs-4 pt-xs-4 my-xs-4 mt-lg-0 pt-lg-0 my-lg-0">
 							<a class="navbar-brand ml-0 mr-auto" id="logo" href="#"><h1>br-<span>casa</span></h1></a>
 <!--
 							<button class="navbar-toggler mr-0 ml-auto" type="button" id="mobile-nav-toggle" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation" onclick="xxx()">
@@ -166,14 +153,14 @@
 										
 										<div class="dropdown-menu">
 											<a class="dropdown-item">
-												<button type="submit" class="btn btn-link" id={$value1} name={$value1} value={$menu["category-id"][$key1] . "#"}>
+												<button type="submit" class="btn btn-link" id={$value1} name={$value1} value='{$menu["category-id"][$key1] . "#"}' onclick="document.getElementById('formHeader').submit()">
 													All
 												</button>
 											</a>
 						
 											{loop="$menu['subCategory-name'][$key1]"}
 											<a class="dropdown-item">
-												<button type="submit" class="btn btn-link" id={$value2} name={$value2} value={$menu["category-id"][$key1] ."#@". $menu["subCategory-id"][$key1][$key2]}>
+												<button type="submit" class="btn btn-link" id={$value2} name={$value2} value='{$menu["category-id"][$key1] ."#@". $menu["subCategory-id"][$key1][$key2]}' onclick="document.getElementById('formHeader').submit()">
 													{$value2}
 												</button>
 											</a>
@@ -203,41 +190,10 @@
 				</form>
 				<!-- Form for navbar search area -->
 			</section> 
-			<!-- Roof area Ends -->
+			<!-- Head area Ends -->
 		</div>
 		<!-- </header> -->
 
-<script type="text/javascript">
-
-	function xxx() {
-//$( "body" ).css("background", "#000");
-
-/*	var x = 56;
-    var y = 78;
-    var z = 92;
-    var t = 0.15;
-    var thergb = "rgb(" + x + "," + y + "," + z + "," + t + ")"; 
-    document.body.style.background=thergb;
-    $("#navbar").css("background", thergb);
-    $("#portfolio").css("background", thergb);
-    $("body").addClass("box-shadow");
-    $(".box-shadow").css("z-index", "999999999999999999999");
-*/
-    var $mobile_nav = $('#main-menu').clone().prop({
-      id: 'mobile-nav'
-    });
-
-	$('body').append('<div id="mobile-body-overly"></div>');
-    $('body').toggleClass('mobile-nav-active');
-    $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
-    $('#mobile-body-overly').toggle();
-
-	}
-
-
-
-
-</script>
   		<!-- head in front of the body -->
 		<!-- avoid small vertical jump when scrolling -->
 		<div class="noJumpVScroll">

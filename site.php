@@ -100,7 +100,7 @@ $app->get("/", function() {
 	/* Page configuration */
 	$pageConfig[0] = "header";
 	$pageConfig[1] = $language;
-	$pageConfig[4] = "";
+	$pageConfig[4] = $language;
 
 	// __construct (header)
 	$page = new Page($pageConfig);

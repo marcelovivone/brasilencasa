@@ -174,14 +174,13 @@ $(function(){
     var $mobile_nav = $('#navbar-nav').clone().prop({
       id: 'mobile-nav'
     });
-
     $mobile_nav.find('ul').attr({
       'class': '',
       'id': ''
     });
 
     $('body').append($mobile_nav);
-    $('#header .navbar-light .container').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
+    $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
     $('body').append('<div id="mobile-body-overly"></div>');
 //    $('#mobile-nav').find('.menu-has-children').prepend('<i class="fa fa-chevron-down"></i>');
 
@@ -201,7 +200,6 @@ $(function(){
       var container = $("#mobile-nav, #mobile-nav-toggle");
 
       if (!container.is(e.target) && container.has(e.target).length === 0) {
-
         if ($('body').hasClass('mobile-nav-active')) {
           $('body').removeClass('mobile-nav-active');
           $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
@@ -209,7 +207,6 @@ $(function(){
         }
       }
     });
-
   } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
     $("#mobile-nav, #mobile-nav-toggle").hide();
   }
@@ -283,7 +280,7 @@ $('.skill-shortcode').appear(function() {
 
 /* head in front of body */
 window.onscroll = function() {
-  $(document).width() > 768 ? (navbarSubmenu ? vNavSubBar() : vNavMenBar()) : vNavMenBar();
+  navbarSubmenu ? vNavSubBar() : vNavMenBar();
 };
 
 let navbar = document.getElementById("navbar");

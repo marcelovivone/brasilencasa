@@ -27,6 +27,15 @@ class Page
 	public function __construct($opts = array(), $tpl_dir = "/views/") 
 	{
 
+		/*
+			opts[]:
+				0: PHP Header name
+				1: TPL archive directory
+				2: TPL header archive directory
+				3: Menu array
+				4: Route for HTML link action
+		*/
+
 		$this->options = array_merge($this->defaults, $opts);
 
 		$this->tpl = new Tpl;
@@ -49,7 +58,6 @@ class Page
 			$this->setData($this->options["data"]);
 
 //			$this->tpl->draw("header");
-
 			if ($this->options["header"]["args"] === true) {
 				$this->setTpl($opts[0], [
 					'menu'=>$opts[3],
@@ -123,7 +131,6 @@ class Page
 			$this->setData($this->options["data"]);
 			$this->tpl->draw("footer");
 		}
-
 	}
 }
 

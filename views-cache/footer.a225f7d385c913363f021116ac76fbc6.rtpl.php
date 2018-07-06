@@ -130,25 +130,20 @@
 
 		<!-- JavaScript & jQuery Plugins -->
 		<!-- jQuery Load -->
-<script src="/vendor/components/jquery/jquery.min.js"></script>
-<!--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.3/js/tether.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
--->
-<script src="/assets/js/tether.1.4.3.min.js"></script>
-<script src="/assets/js/popper.1.14.3.min.js"></script>
-<script src="/vendor/components/jquery/jquery.min.js"></script>
+		<script src="/vendor/components/jquery/jquery.min.js"></script>
 
-<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.js"></script>
+		<!-- Bootstrap package -->
+		<script src="/assets/js/tether.1.4.3.min.js"></script>
+		<script src="/assets/js/popper.1.14.3.min.js"></script>
+		<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.js"></script>
 
-		<!--Text Rotator-->
+		<!-- Text Rotator -->
 		<script src="/assets/js/jquery.mixitup.js"></script>
-		<!--WOW Scroll Spy-->
+		<!-- WOW Scroll Spy -->
 		<script src="/assets/js/wow.js"></script>
 		<!-- OWL Carousel -->
 		<script src="/assets/js/owl.carousel.js"></script>
- 
-		<!-- WayPoint -->
+ 		<!-- WayPoint -->
 		<script src="/assets/js/waypoint.js"></script>
 		<!-- CounterUp -->
 		<script src="/assets/js/jquery.counterup.min.js"></script>
@@ -157,7 +152,14 @@
 		<!-- Appear -->
 		<script src="/assets/js/jquery.appear.js"></script>
 		<script src="/assets/js/jquery.vide.js"></script>
-		 <!-- All JS plugin Triggers -->
+		<!-- All JS plugin Triggers -->
 		<script src="/assets/js/main.js"></script>
+
+		<!-- Form Validator -->
+		<script src="/assets/js/jquery.validate.min.js"></script>
+		<script src="/assets/js/additional-methods.min.js"></script>
+
+		<!-- Contact Form JavaScript File -->
+		<script src="/assets/js/contact/contactform.js"></script>
 	</body>
 </html>

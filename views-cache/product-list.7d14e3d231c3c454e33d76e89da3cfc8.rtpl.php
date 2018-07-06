@@ -1,15 +1,4 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?><script>
-function xxx(element) {
-confirm('fora');
-  if(element.checked == true) {
-alert('dentro');
-  	$('#myform').submit();
-  }
-}
-//onchange="document.getElementById("productsForm").submit()"
-</script>
-
-</div>
+<?php if(!class_exists('Rain\Tpl')){exit;}?></div>
 <!-- first section (produto)-->
 <section id="service-block-main" class="wow fadeInUp section">
 	<!-- Container Starts -->

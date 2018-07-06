@@ -34,14 +34,14 @@
 	</head>
 
 	<body>
-		<!-- <header id="header-wrap"> -->
-		<!-- Roof area starts -->
+		<!-- Heder - Start  -->
+		<!-- Roof - Start -->
 		<section id="roof" class="roof-content">
-			<!-- Navbar Starts -->
+			<!-- Navbar - Start -->
 			<nav class="navbar navbar-expand navbar-light">
-				<div class="container">
+				<div class="container-fluid">
 					<div class="navbar-nav roof-menu" id="roof-menu">
-						<!-- Navbar Starts -->
+						<!-- Navbar - Start -->
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/contact' style="text-transform: lowercase !important;"><i class="fa fa-envelope"></i> <span class="roof-description">contact@brasilencasa.com</span></a>
@@ -58,7 +58,7 @@
 						</ul>
 
 						<ul class="navbar-nav ml-auto">
-							<li class="nav-item">
+							<li class="nav-item ml-xs-0">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
 							</li>                                     
 							<li class="nav-item">
@@ -69,7 +69,7 @@
 							</li>                                     
 							<?php if( checkLogin(false) ){ ?>
 							<li class="nav-item">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName(); ?></span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName('en'); ?></span></a>
 							</li>                                     
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/logout'><i class="fa fa-close"></i> <span class="roof-description"> Logout</span></a>
@@ -93,7 +93,7 @@
 							</li>                                     
 							<?php if( checkLogin(false) ){ ?>
 							<li class="nav-item">
-								<a class="nav-link" href="/profile"><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName(); ?></span></a>
+								<a class="nav-link" href="/profile"><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName('en'); ?></span></a>
 							</li>                                     
 							<li class="nav-item">
 								<a class="nav-link" href="/logout"><i class="fa fa-close"></i> <span class="roof-description">Sair</span></a>

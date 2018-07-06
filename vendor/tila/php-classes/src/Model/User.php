@@ -18,10 +18,10 @@ class User extends Model
 	const ERROR_REGISTER = "UserErrorRegister";
 	const SUCCESS = "UserSuccess";
 
-	public static function getFromSession()
+	public static function getFromSession($language)
 	{
 
-		$user = new User();
+		$user = new User($language);
 
 		// verifica se a sessão está definida e se o usuário existe dentro da sessão
 		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
@@ -75,45 +75,55 @@ class User extends Model
 
 	}
 
-	public static function login($login, $password)
+	public static function login($email, $password, $language)
 	{
 
 		$sql = new Sql();
-
-		$results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE u.deslogin = :LOGIN", array(
+/*
+		$results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE u.dslogin = :LOGIN", array(
 			":LOGIN"=>$login
+		));
+*/
+		$results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE p.dsemail = :EMAIL", array(
+			":EMAIL"=>$email
 		));
 
 		if (count($results) === 0)
 		{
 			// contrabarra é necessária porque a exceção está no escopo principal (no namespace principal
 			// do PHP) e não dentro do namespace corrente (\Tila\Model)
-			throw new \Exception("Usuário inexistente ou senha inválida.", 1);
+//			throw new \Exception("Usuário inexistente ou senha inválida.", 1);
+			return false;
 		}
 
-		$data = $results[0];
-
-		if (password_verify($password, $data["despassword"]))
+		if ($password === '')
 		{
-			
-			$user = new User();
+			return true;
+		} else {
+			$data = $results[0];
 
-			$data['desperson'] = utf8_encode($data['desperson']);
+			if (password_verify($password, $data["cdpassword"]))
+			{
+				
+				$user = new User($language);
 
-			$user->setData($data);
-			
-			$_SESSION[User::SESSION] = $user->getValues();
+				$data['dsperson'] = utf8_encode($data['dsperson']);
 
-			return $user;
+				$user->setData($data);
+				
+				$_SESSION[User::SESSION] = $user->getValues();
 
-		} else 
-		{
+				return $user;
 
-			// contrabarra é necessária porque a exceção está no escopo principal (no namespace principal
-			// do PHP) e não dentro do namespace corrente (\Tila\Model)
-			throw new \Exception("Usuário inexistente ou senha inválida.", 1);
+			} else 
+			{
+
+				// contrabarra é necessária porque a exceção está no escopo principal (no namespace principal
+				// do PHP) e não dentro do namespace corrente (\Tila\Model)
+//				throw new \Exception("Usuário inexistente ou senha inválida.", 1);
+				return false;
+			}
 		}
-
 	}
 
 	public static function verifyLogin($inadmin = true)
@@ -136,6 +146,46 @@ class User extends Model
 
 	}
 
+	public static function checkUser($email, $password)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users WHERE dsemail = :EMAIL", array(
+			":EMAIL"=>$email
+		));
+
+		if (count($results) === 0)
+		{
+			return false;
+		} else {
+
+			if ($password === ''){
+				return true;
+			} else {
+				$data = $results[0];
+
+				if (password_verify($password, $data["cdpassword"])) {
+
+					$user = new User($language);
+
+					$data['nmlast'] = utf8_encode($data['nmlast']);
+
+					$user->setData($data);
+					
+					$_SESSION[User::SESSION] = $user->getValues();
+
+					return $user;
+				} else {
+					return false;
+				}
+
+
+			}
+		}
+
+	}
+
 	public static function logout() 
 	{
 		$_SESSION[User::SESSION] = NULL;
@@ -146,7 +196,7 @@ class User extends Model
 
 		$sql = new Sql();
 
-		return $results = $sql->select("SELECT * FROM tb_users INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
+		return $results = $sql->select("SELECT * FROM tb_users INNER JOIN tb_persons b USING(idperson) ORDER BY b.dsperson");
 
 	}
 
@@ -156,12 +206,12 @@ class User extends Model
 		$sql = new Sql();
 
 
-		$results = $sql->select("CALL sp_users_save (:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", 
+		$results = $sql->select("CALL sp_users_save (:dsperson, :dslogin, :cdpassword, :dsemail, :nrphone, :inadmin)", 
 			array(
-			":desperson"=>utf8_decode($this->getdesperson()),
-			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>User::getPasswordHash($this->getdespassword()),
-			":desemail"=>$this->getdesemail(),
+			":dsperson"=>utf8_decode($this->getdsperson()),
+			":dslogin"=>$this->getdslogin(),
+			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
+			":dsemail"=>$this->getdsemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
 		));
@@ -184,7 +234,7 @@ class User extends Model
 
 			$data = $results[0];
 
-			$data['desperson'] = utf8_encode($data['desperson']);
+			$data['dsperson'] = utf8_encode($data['dsperson']);
 
 		}
 
@@ -197,13 +247,13 @@ class User extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_usersupdate_save (:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", 
+		$results = $sql->select("CALL sp_usersupdate_save (:iduser, :dsperson, :dslogin, :cdpassword, :dsemail, :nrphone, :inadmin)", 
 			array(
 			":iduser"=>$this->getiduser(),
-			":desperson"=>utf8_decode($this->getdesperson()),
-			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>User::getPasswordHash($this->getdespassword()),
-			":desemail"=>$this->getdesemail(),
+			":dsperson"=>utf8_decode($this->getdsperson()),
+			":dslogin"=>$this->getdslogin(),
+			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
+			":dsemail"=>$this->getdsemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
 		));
@@ -228,7 +278,7 @@ class User extends Model
 
 	}
 
-	public static function getForgot($email, $inadmin = true)
+	public static function getForgot($email, $language, $inadmin = true)
 	{
 
 		$sql = new Sql();
@@ -237,7 +287,7 @@ class User extends Model
 			SELECT * 
 			  FROM tb_persons a
 			 INNER JOIN tb_users b USING(idperson)
-			 WHERE a.desemail = :email;",
+			 WHERE a.dsemail = :email;",
 			 array(
 			 	":email"=>$email
 			 ));
@@ -251,10 +301,10 @@ class User extends Model
 
 			$data = $results1[0];
 
-			$results2 = $sql->select("CALL sp_userspasswordsrecoveries_create (:iduser, :desip)", 
+			$results2 = $sql->select("CALL sp_userspasswordsrecoveries_create (:iduser, :dsip)", 
 				array(
 					":iduser"=>$data["iduser"],
-					":desip"=>$_SERVER["REMOTE_ADDR"]
+					":dsip"=>$_SERVER["REMOTE_ADDR"]
 			));			
 
 		}
@@ -276,34 +326,31 @@ class User extends Model
 			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(USER::CIPHER));
 
 			$code = base64_encode(openssl_encrypt($dataRecovery["idrecovery"], USER::CIPHER, $key, 0, $iv));
-/*
-echo 'Code: '.$code;
-//echo ' --- ';
-//echo base64_encode($code);
-echo ' --- ';
-echo 'IV: '.$iv;
-*/
 			$iv = base64_encode($iv);
-/*
-echo ' --- ';
-echo 'IV64: '.$iv;
-//exit;
-*/
+
 			// se o método foi chamado a partir da área de administração
+			// calling origin is the administrative section
 			if ($inadmin === true) {
 				
-				$link = "http://www.tilacommerce.com.br/admin/forgot/reset?code=$code&iv=$iv";
+				$link = "http://www.brasilencasa.com/$language/admin/forgot/reset?code=$code&iv=$iv";
 
 			// se o método foi chamado a partir da área de loja
+			// calling origin is the store section
 			} else {
 
-				$link = "http://www.tilacommerce.com.br/forgot/reset?code=$code&iv=$iv";
+				$link = "http://www.brasilencasa.com/$language/forgot/reset?code=$code&iv=$iv";
 
 			}
 
-			$mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir Senha da Tila Store", "forgot", 
+			$mailer = new Mailer(
+				$data["dsemail"], 
+				$data["dsperson"], 
+				($language === "en" ? "br-Casa - Password Assistance" :
+					($language === "es" ? utf8_decode("br-Casa - Ayuda de Contraseña") :
+						($language === "pt" ? utf8_decode("br-Casa - Auxílio de Senha") : "br-Casa - Password Assistance"))), 
+				"forgot", 
 				array(
-					"name"=>$data["desperson"],
+					"name"=>$data["dsperson"],
 					"link"=>$link
 			));
 
@@ -321,27 +368,9 @@ echo 'IV64: '.$iv;
 		// pesquisar qual maneira é a mais segura
 		$key = USER::SECRET;
 
-/*
-echo 'Code: '.$code;
-//echo ' --- ';
-//echo base64_encode($code);
-echo ' --- ';
-echo 'IV: '.$iv;
-*/
-
 		$iv = base64_decode($iv);
 
-/*
-echo ' --- ';
-echo 'IV64: '.$iv;
-echo ' --- ';
-*/
-
 		$idrecovery = openssl_decrypt(base64_decode($code), USER::CIPHER, $key, 0, $iv);
-
-/*
-echo $idrecovery;
-*/
 
 		$sql = new Sql();
 
@@ -385,7 +414,7 @@ echo $idrecovery;
 		
 		$sql = new Sql();
 
-		$sql->query("UPDATE tb_users SET despassword = :password WHERE iduser = :iduser", array(
+		$sql->query("UPDATE tb_users SET cdpassword = :password WHERE iduser = :iduser", array(
 			":password"=>$password,
 			":iduser"=>$this->getiduser()
 		));
@@ -450,9 +479,9 @@ echo $idrecovery;
 			SELECT * 
 			  FROM tb_users u 
 			 INNER JOIN tb_persons p USING(idperson) 
-			 WHERE u.deslogin = :deslogin OR 
-			 	   p.desemail = :deslogin", [
-			':deslogin'=>$login
+			 WHERE u.dslogin = :dslogin OR 
+			 	   p.dsemail = :dslogin", [
+			':dslogin'=>$login
 		]);
 
 		return (count($results) > 0);
@@ -525,7 +554,7 @@ echo $idrecovery;
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_users u
 			 INNER JOIN tb_persons p USING(idperson) 
-			 ORDER BY p.desperson
+			 ORDER BY p.dsperson
 			 LIMIT $start, $itemPerPage;
 		");
 
@@ -550,8 +579,8 @@ echo $idrecovery;
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_users u
 			 INNER JOIN tb_persons p USING(idperson) 
-			 WHERE p.desperson LIKE :searchLike OR p.desemail = :search OR u.deslogin LIKE :searchLike
-			 ORDER BY p.desperson
+			 WHERE p.dsperson LIKE :searchLike OR p.dsemail = :search OR u.dslogin LIKE :searchLike
+			 ORDER BY p.dsperson
 			 LIMIT $start, $itemPerPage;
 		", [
 			':search'=>$search,

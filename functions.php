@@ -26,10 +26,10 @@ function checkLogin($inadmin = true)
 
 }
 
-function getUserName()
+function getUserName($language)
 {
 
-	$user = User::getFromSession();
+	$user = User::getFromSession($language);
 
 	return $user->getdesperson();
 

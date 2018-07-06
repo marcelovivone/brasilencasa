@@ -1,9 +1,10 @@
 <?php
 
-use \Tila\PageAdmin;
+use \Tila\Page;
 use \Tila\Model\User;
 
-// rota de PageAdmin
+/* Route to PageAdmin root */
+/*
 $app->get("/admin", function() {
 
 	// quando for acessar a página de admin, verificar se o usuário está logado
@@ -17,36 +18,55 @@ $app->get("/admin", function() {
 	$page->setTpl("index");
 
 });
+*/
+/* Route to action for login page */
+$app->get("/{language}/admin/login", function($request, $response, $args) {
 
-// rota de página de Login
-$app->get("/admin/login", function() {
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/admin";
+	$pageConfig[4] = "/".$args["language"];
+
 	// __construct (header)
+//	$page = new PageAdmin($pageConfig);
+	$page = new Page($pageConfig);
+/*
 	$page = new PageAdmin([
 		"header"=>false,
 		"footer"=>false
 	]);
-
-	// body
+*/
+	// Body
 	$page->setTpl("login");
 
 });
 
-// rota de validação de login
-$app->post("/admin/login", function() {
+/* Route to login  */
+$app->post("/{language}/admin/login", function($request, $response, $args) {
 
-	User::login($_POST["login"], $_POST["password"]);
+	try {
+		User::login($_POST["reg-email"], $_POST["reg-password"], $args["language"]);
+	} catch (Exception $e) {
+    	echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+		header("Location: /".$args["language"]."/admin/login");
+    	exit;
+	}
 
-	header("Location: /admin");
+//	header("Location: /".$args["language"]."/admin");
+	header("Location: /admin/".$args["language"]);
 	exit;
 
 });
 
 // rota de Logout
-$app->get("/admin/logout", function() {
+$app->get("/{language}/admin/logout", function($request, $response, $args) {
 
 	User::Logout();
 
-	header("Location: /admin/login");
+	header("Location: /".$args["language"]."/admin/login");
 	exit;
 
 });

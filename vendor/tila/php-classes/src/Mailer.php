@@ -18,7 +18,7 @@ class Mailer
 	{
 		
 		$config = array(
-			"tpl_dir"=>$_SERVER["DOCUMENT_ROOT"]."/views/email/",
+			"tpl_dir"=>$_SERVER["DOCUMENT_ROOT"]."/views/en/store/email/",
 			"cache_dir"=>$_SERVER["DOCUMENT_ROOT"]."/views-cache/",
 			"debug"=>false
 		);
@@ -81,10 +81,11 @@ class Mailer
 		//$this->mail->addReplyTo('replyto@example.com', 'First Last');
 
 		//Set who the message is to be sent to
-		$this->mail->addAddress($toAddress, $toName);
+//		$this->mail->addAddress($toAddress, $toName);
+		$this->mail->addAddress("marcelovivone@gmail.com", $toName);
 
 		//Set the subject line
-		$this->mail->Subject = @subject;
+		$this->mail->Subject = $subject;
 
 		//Read an HTML message body from an external file, convert referenced images to embedded,
 		//convert HTML into a basic plain-text alternative body

@@ -1,8 +1,22 @@
 <section id="recipes">
 	<div class="container">
 		<div class="section-header">
+			{loop="$recipes"}
+			{$recipe="S"}
+			{if="$counter==0"}
+			<h2>Recipes with {$value.nmproduct}</h2>
+			{/if}
+			<h5 class='{if="$counter>0"}mt-4{/if}'>{$value.nmrecipe}</h5>
+			<p>Ingredients: {$value.dsingredient}</p>
+			<p class="mt-2">Recipe: {$value.dsrecipe}</p>
+			{else}
+			{$recipe="N"}
 			<h2>Recipes</h2>
 			<p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+			{/loop}
+			{if="$recipe='S'"}
+			<h2 class='mt-0 pt-0'></h2>
+			{/if}
 		</div>
 			
 		<div class="row">

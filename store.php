@@ -2,14 +2,16 @@
 
 use \Tila\Page;
 //use \Tila\PageAdmin;
-use \Tila\Model\User;
-use \Tila\Model\Category;
-use \Tila\Model\SubCategory;
-use \Tila\Model\Product;
-use \Tila\Model\Cart;
 use \Tila\Model\Address;
+use \Tila\Model\Cart;
+use \Tila\Model\Category;
 use \Tila\Model\Order;
 use \Tila\Model\OrderStatus;
+use \Tila\Model\Product;
+use \Tila\Model\Recipe;
+use \Tila\Model\SubCategory;
+use \Tila\Model\User;
+use \Tila\Model\WishList;
 
 function mainMenu ($language, &$menu = [], &$filter = [], &$pageConfig = []) {
 
@@ -174,7 +176,7 @@ $app->get("/{language}/contact", function($request, $response, $args) {
 
 });
 
-/* Route to recipes page */
+/* Route to recipe page */
 $app->get("/{language}/recipes", function($request, $response, $args) {
 
 	// configure products page
@@ -188,9 +190,44 @@ $app->get("/{language}/recipes", function($request, $response, $args) {
 	// __construct (header)
 	$page = new Page($pageConfig);
 
+	$recipe = new Recipe($args["language"]);
+
 	// Tpl configuration and drawning
 	$page->setTpl("recipe", [
-		'menu'=>$menu
+		'recipes'=>$recipe
+	]);
+
+});
+
+/* Route to recipe page by product */
+$app->get("/{language}/recipes/{dsurl}", function($request, $response, $args) {
+
+	// configure products page
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/recipe";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	/* Loading products */
+	$product = new Product($args["language"]);
+
+	$product->getFromURL($args["dsurl"],10);
+
+	$recipe = new Recipe($args["language"]);
+
+	$recipe->setData([
+		"idproduct"=>$product->getidproduct()
+	]);
+
+	;
+
+	$page->setTpl("recipes", [
+		'recipes'=>$recipe->getByProduct()
 	]);
 
 });
@@ -289,15 +326,23 @@ $app->post("/{language}/products", function($request, $response, $args) {
 });
 
 // detail product page route
-$app->get("/{language}/products/{desurl}", function($request, $response, $args) {
+$app->get("/{language}/products/{dsurl}", function($request, $response, $args) {
 
-	$product = new Product();
+	// configure products page
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
-	$product->getFromURL($args["desurl"],$args["language"]);
+	/* Loading products */
+	$product = new Product($args["language"]);
 
-	$vet = [];
-	$vet[0] = $args["language"];
-	$page = new Page($vet);
+	$product->getFromURL($args["dsurl"]);
+
+	/* Page configuration */
+	$pageConfig[0] = "header-compact";
+	$pageConfig[1] = $args["language"]."/product";
+	$pageConfig[4] = "/".$args["language"]."/products";
+
+	// __construct (header)
+	$page = new Page($pageConfig);
 
 	$page->setTpl("product-detail", [
 		'product'=>$product->getValues(),
@@ -336,7 +381,7 @@ $app->post("/{language}/login", function($request, $response, $args) {
 
 	try {
 
-		User::login($_POST['email'], $_POST['password'], $args["language"]);
+		User::login($_POST['reg-email'], $_POST['reg-password'], $args["language"]);
 
 	} catch(Exception $e) {
 
@@ -344,7 +389,8 @@ $app->post("/{language}/login", function($request, $response, $args) {
 
 	}
 
-	header("Location: /{language}/checkout");
+//	header("Location: /".$args["language"]."/store/checkout");
+	header("Location: /".$args["language"]."/products");
 	exit;
 
 });
@@ -353,9 +399,203 @@ $app->post("/{language}/login", function($request, $response, $args) {
 $app->get("/{language}/logout", function($request, $response, $args) {
 
 	User::logout();
-	$page = new Page();
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/store";
+	$pageConfig[4] = "/".$args["language"];
+
+	$page = new Page($pageConfig);
 
 	header("Location: /".$args["language"]."/login");
+	exit;
+
+});
+
+// register new user route
+$app->post("/{language}/register", function($request, $response, $args) {
+
+	// guardar os dados digitados pelo usuário em uma sessão
+	// utilizada para o caso de ter algum erro no cadastro e não limpar os campos da página
+	$_SESSION["registerValues"] = $_POST;
+/*
+	// validação de campos obrigatórios da página
+	if (!isset($_POST['name']) || $_POST['name'] == '') {
+
+		User::setErrorRegister("Preencha o seu nome.");
+		header('Location: /login');
+		exit;
+
+	}
+
+	if (!isset($_POST['email']) || $_POST['email'] == '') {
+
+		User::setErrorRegister("Preencha o seu e-mail.");
+		header('Location: /login');
+		exit;
+
+	}
+
+	if (!isset($_POST['password']) || $_POST['password'] == '') {
+
+		User::setErrorRegister("Preencha a senha.");
+		header('Location: /login');
+		exit;
+
+	}
+
+	// verifica se o usuário já existe
+	if (User::checkLoginExist($_POST['email']) === true) {
+
+		User::setErrorRegister("Esse endereço de e-mail já está sendo utilizado por outro usuário.");
+		header('Location: /login');
+		exit;
+
+	}
+*/
+	$user = new User($args["language"]);
+
+	$user->setData([
+		"inadmin"=>0,
+		"dsemail"=>$_POST["new-email"],
+		"nmfirst"=>$_POST["new-firstname"],
+		"nmlast"=>$_POST["new-lastname"],
+		"cdpassword"=>$_POST["newpassword"],
+		"tptitle"=>$_POST["title"],
+		"nrphone"=>$_POST["new-phone"]
+	]);
+
+	// autentica o usuário
+	// caso isso não seja feito, a rota de checkout irá redirecionar para a rota de login
+	// (o usuário precisa estar logado para acessar a rota de checkout)
+	$user->insert();
+
+	User::login($_POST["new-email"], $_POST["newpassword"], $args["language"]);
+
+//	header("Location: /".$args["language"]."/checkout");
+	header("Location: /".$args["language"]."/profile");
+	exit;
+
+});
+
+// rota para página de edição dos dados do usuário
+$app->get("/{language}/profile", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// construct
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile", [
+		'user'=>$user->getValues(),
+		'profileMsg'=>User::getSuccess(),
+		'profileError'=>User::getError()
+	]);
+
+});
+
+// rota para salvar dados alterados no banco
+$app->post("/{language}/profile", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+/*
+	// validação de campos obrigatórios da página
+	if (!isset($_POST['desperson']) || $_POST['desperson'] === '') {
+
+		User::setError("Preencha o seu nome.");
+		header('Location: /profile');
+		exit;
+
+	}
+
+	if (!isset($_POST['desemail']) || $_POST['desemail'] === '') {
+
+		User::setErrorRegister("Preencha o seu e-mail.");
+		header('Location: /profile');
+		exit;
+
+	}
+*/
+	$user = User::getFromSession($args["language"]);
+
+	// verifica se o usuário já existe
+	if ($_POST['dsemail'] !== $user->getdsemail()) {
+
+		if (User::checkLoginExist($_POST['dsemail']) === true) {
+
+			// retorna os valores informados pelo usuário para a sessão
+			// no get do profile, esses valores serão lidos e reexibidos nos campos da página
+			$_SESSION[User::SESSION] = $_POST;
+
+			Switch ($args["language"]) {
+
+				Case "en":
+					User::setError("Email is already being used by another user.");
+					break;
+
+				Case "es":
+					User::setError("E-mail ya está siendo utilizado por otro usuario.");
+					break;
+
+				Case "pt":
+					User::setError("E-mail já está sendo utilizado por outro usuário.");
+					break;
+
+			}
+
+			header("Location: /".$args["language"]."/profile");
+			exit;
+
+		}
+
+	}
+
+	// evita command injection para alterar o usuário para administrador
+	// sobrescrevendo uma possível alteração pelo inadmin e pela senha
+	// originais salvas no banco de dados
+	$_POST['iduser'] = $user->getiduser();
+	$_POST['inadmin'] = $user->getinadmin();
+	$_POST['password'] = $user->getcdpassword();
+
+	// o login é o mesmo que o e-mail para os usuários do site
+//	$_POST['deslogin'] = $_POST['desemail'];
+
+	$user->setData($_POST);
+
+	$user->update();
+
+	$_SESSION[User::SESSION] = $user->getValues();
+
+	Switch ($args["language"]) {
+
+		Case "en":
+			User::setSuccess("Data changed successfully!");
+			break;
+
+		Case "es":
+			User::setSuccess("¡Datos alterados con éxito!");
+			break;
+
+		Case "pt":
+			User::setSuccess("Dados alterados com sucesso!");
+			break;
+
+	}
+
+	header("location: /".$args["language"]."/profile");
 	exit;
 
 });
@@ -480,7 +720,7 @@ $app->get("/{language}/forgot/reset", function($request, $response, $args) {
 
 	// body
 	$page->setTpl("forgot-reset", array(
-		"name"=>$user["dsperson"],
+		"name"=>$user["nmfirst"],
 		"code"=>$_GET["code"],
 		"iv"=>$_GET["iv"]
 	));
@@ -498,11 +738,9 @@ $app->post("/{language}/forgot/reset", function($request, $response, $args) {
 
 	$user->get((int)$forgot["iduser"]);
 
-	$password = password_hash($_POST["password"], PASSWORD_DEFAULT, [
-		"cost"=>12
-	]);
+//	$password = USER::getPasswordHash($_POST["password"]);
 
-	$user->setPassword($password);
+	$user->setPassword($_POST["password"]);
 
 	// configure main menu products
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
@@ -520,7 +758,408 @@ $app->post("/{language}/forgot/reset", function($request, $response, $args) {
 
 });
 
+$app->get("/{language}/profile/change-password", function($request, $response, $args) {
 
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-change-password", [
+		'user'=>$user->getValues(),
+		'changePassError'=>User::getError(),
+		'changePassSuccess'=>User::getSuccess()
+	]);
+
+});
+
+$app->post("/{language}/profile/change-password", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+	$user->get($user->getiduser());
+
+	$user->setPassword($_POST['newpassword']);
+
+	Switch ($args["language"]) {
+
+		Case "en":
+			User::setSuccess('Password changed successfully.');
+			break;
+
+		Case "es":
+			User::setSuccess('Contraseña alterada con éxito.');
+			break;
+
+		Case "pt":
+			User::setSuccess('Senha alterada com sucesso.');
+			break;
+
+	}
+
+	header("Location: /".$args["language"]."/profile/change-password");
+	exit;
+
+});
+
+$app->get("/{language}/profile/addresses/{type}", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	$address = new Address($args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-addresses", [
+		"action"=>"read",
+		"type"=>$args["type"],
+		'addresses'=>$user->getAddresses(strtoupper(substr($args["type"], 0, 1))),
+		'profileAddressError'=>$address::getError(),
+		'profileAddressSuccess'=>$address::getSuccess()
+	]);
+
+});
+
+$app->get("/{language}/profile/addresses/{type}/new", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-addresses", [
+		"action"=>"new",
+		"type"=>$args["type"],
+		"idperson"=>$_SESSION["User"]["idperson"],
+		'profileAddressError'=>"",
+		'profileAddressSuccess'=>""
+	]);
+
+});
+
+$app->post("/{language}/profile/addresses/{type}/save", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$address = new Address($args["language"]);
+
+	$address->setData([
+		"idaddress"=>isset($_POST["idaddress"]) ? $_POST["idaddress"] : "",
+		"idperson"=>$_SESSION["User"]["idperson"],
+		"dsnumber"=>$_POST["dsnumber"],
+		"dsaddress"=>$_POST["dsaddress"],
+		"dscity"=>$_POST["dscity"],
+//		"dscountry"=>$_POST["dscountry"],
+		"dscountry"=>"España",
+		"cdzipcode"=>$_POST["cdzipcode"],
+		"tpaddress"=>$_POST["tpaddress"],
+		"fldefault"=>isset($_POST["fldefault"]) ? $_POST["fldefault"] : "N",
+		"flreplicate"=>isset($_POST["flreplicate"]) ? $_POST["flreplicate"] : "N"
+	]);
+
+	$address->save();
+
+	header("location: /".$args["language"]."/profile/addresses/".$args["type"]);
+	exit;
+
+});
+
+$app->get("/{language}/profile/addresses/{type}/edit/{idaddress}/{seqaddress}", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$address = new Address($args["language"]);
+
+	$address->setData([
+		"idaddress"=>$args["idaddress"]
+	]);
+
+	$address->get($address);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-addresses", [
+		"action"=>"edit",
+		"type"=>$args["type"],
+		'seqaddress'=>$args["seqaddress"],
+		'addresses'=>(array)$address,
+		'profileAddressError'=>$address::getError(),
+		'profileAddressSuccess'=>$address::getSuccess()
+	]);
+
+});
+
+$app->post("/{language}/profile/addresses/{type}/delete", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$address = new Address($args["language"]);
+
+	$address->setData([
+		"idaddress"=>(int)$_POST["idaddress"]
+	]);
+
+	$orders = $address->getOrders($address);
+
+	if (count($orders) !== 0) {
+
+		Switch ($args["language"]) {
+
+			Case "en":
+				Address::setError("Address pending delivery. Deletion not allowed at this time.");
+				break;
+
+			Case "es":
+				Address::setError("Dirección con entrega pendiente. Exclusión no permitida en este momento.");
+				break;
+
+			Case "pt":
+				Address::setError("Endereço com entrega pendente. Exclusão não permitida nesse momento.");
+				break;
+
+		}
+		
+		header("location: /".$args["language"]."/profile/addresses/".$args["type"]);
+		exit;
+
+	}
+
+	$address->delete($address);
+
+	header("location: /".$args["language"]."/profile/addresses/".$args["type"]);
+	exit;
+
+});
+
+$app->get("/{language}/profile/orders", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-orders", [
+		'orders'=>$user->getOrders()
+	]);
+
+});
+
+$app->get("/{language}/profile/orders/{idorder}", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$order = new Order($args["language"]);
+
+	$order->get((int)$args["idorder"]);
+
+	$cart = new Cart($args["language"]);
+
+	$cart->get((int)$order->getidcart());
+
+	$cart->getCalculateTotal();
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-orders-details", [
+		"cart"=>$cart->getValues(),
+		"order"=>$order->getValues(),
+		"products"=>$cart->getProducts()
+	]);
+
+});
+
+$app->get("/{language}/order/{idorder}", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$order = new Order($args["language"]);
+
+	$order->get((int)$args["idorder"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/store";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("payment", [
+		'order'=>$order->getValues()
+	]);
+
+});
+
+$app->get("/{language}/profile/wishlist", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	// configure main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/profile";
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+
+	$page->setTpl("profile-wishlist", [
+		'wishlist'=>$user->getWishlist()
+	]);
+
+});
+
+$app->post("/{language}/profile/wishlist/{operation}", function($request, $response, $args) {
+
+/* operation:
+   input, minus and plus from (profile-wishlist)
+   include from (product-list)
+*/
+	if ($_POST["nrquantity"] === "") {
+		header("Location: /".$args["language"]."/profile/wishlist");
+		exit;
+	}
+
+	User::verifyLogin(false, $args["language"]);
+
+	$wishList = new WishList($args["language"]);
+
+	if (isset($_POST["idwishlist"])) {
+
+		$wishList->get((int)$_POST["idwishlist"]);
+
+	} else {
+
+		$user = User::getFromSession($args["language"]);
+
+//		$wishList->getByFK($user->getiduser(), (int)$_POST["idproduct"]);
+
+	$wishList->setData([
+		"iduser"=>$user->getiduser(),
+		"idproduct"=>$_POST["idproduct"]
+	]);
+
+	}
+
+	$wishList->setData([
+		"nrquantity"=>($args["operation"] === "minus" ? $_POST["nrquantity"] - 1 : 
+						($args["operation"] === "plus" ? $_POST["nrquantity"] + 1 : $_POST["nrquantity"]))
+	]);
+
+	$wishList->save();
+
+	header("Location: /".$args["language"]."/profile/wishlist");
+	exit;
+
+});
+
+/*
+// Zipcode reading route
+$app->post("/{language}/zipcode/{cdzipcode}", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$address = new Address($args["language"]);
+
+	$address->setData([
+		"idaddress"=>$_POST["idaddress"],
+		"cdzipcode"=>$_POST["cdzipcode"]
+	]);
+
+	$address->get($address);
+
+	$address->setData([
+		"cdzipcode"=>$_POST["cdzipcode"]
+	]);
+
+	$address->loadFromZipCode($args["cdzipcode"]);
+
+	// configure products page
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"];
+	$pageConfig[4] = "/".$args["language"];
+
+	// __construct (header)
+	$page = new Page($pageConfig);
+
+	$page->setTpl("profile-addresses", [
+		"action"=>"edit",
+		'idaddress'=>$args["idaddress"],
+		'addresses'=>(array)$address,
+		'profileAddressError'=>$address::getError(),
+		'profileAddressSuccess'=>$address::getSuccess()
+	]);
+
+});
+*/
 
 /*
 // rota para página de carrinho

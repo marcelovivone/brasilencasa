@@ -1,0 +1,210 @@
+<script>
+function submitForm(form) {
+
+	if (validateForm(form, false, '', '', 'en', true)) {
+		form.method = "post";
+		form.action = "/en/profile/addresses/{$type}/save";
+		$(form).submit();;	
+	} else {
+		event.preventDefault();
+	}
+}
+
+function remove(form) {
+	if (!confirm("Do you really want to delete this address?")) {
+		event.preventDefault();
+		return;
+	}
+
+	form.method = "post";
+	form.action = `/en/profile/addresses/{$type}/delete`;
+console.log(form);
+	$(form).submit();;	
+}
+</script>
+
+{if="$action=='read'"}
+<section id="profile-{$type}-addresses" class="wow fadeInUp">
+{else}
+<section id="profile-{$type}-addresses-{$action}" class="wow fadeInUp">
+{/if}
+	<div class="form mb-4">
+		<div class="container">
+			<div class="row">
+				<div class="form-group col-12">
+					{if="$profileAddressSuccess != ''"}
+					<div id="success-message">
+						{$profileAddressSuccess}
+					</div>
+					{/if}
+	                
+					{if="$profileAddressError != ''"}
+					<div id="error-message">
+						{$profileAddressError}
+					</div>
+					{/if}
+				</div>
+
+				<div class="section-header col-12">
+					<h2>Your Account</h2>
+				</div>
+
+				<div class="col-md-3 menu">
+					{include="profile-menu"}
+				</div>
+
+				<div class="col-md-9 field">
+					{loop="$addresses"}
+					<form action="" method="post" class="profile-addresses-form" id="profile-addresses-form{$value.idaddress}">
+						<div class="row row{$counter+1}">
+							{if="$action=='read'"}
+							<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+								<h6>#{$counter+1}</h6>
+								{if="$value.fldefault=='S'"}
+								<span>&nbsp (Default {if="$type=='billing'"}Billing{else}Shipping{/if} Address)</span>
+								{/if}
+							</div>
+
+							<div class="col-6 d-flex justify-content-end">
+
+								{if="$counter==0 || $action=='edit'"}
+								<a class="btn btn-default pt-0" href=/en/profile/addresses/{if="$type=='billing'"}shipping{else}billing{/if} role="button"> {if="$type=='billing'"}Shipping{else}Billing{/if} Addresses</a>
+								<a class="btn btn-default pt-0" href="/en/profile/addresses/{$type}/new" role="button">New</a>
+								{/if}
+								<a class="btn btn-default pt-0" href="/en/profile/addresses/{$type}/edit/{$value.idaddress}/{$counter+1}" role="button">Edit</a>
+								<a class="btn btn-default pt-0" href="javascript:void(0);" onclick="remove(document.getElementById('profile-addresses-form{$value.idaddress}'));" role="button">Delete</a>
+							</div>
+							{else}
+							<div class="col-12 d-flex justify-content-end mt-0" style="margin-bottom: 12px">
+								<a class="btn btn-default pt-0" href="/en/profile/addresses/billing" role="button">Billing Addresses</a>
+								<a class="btn btn-default pt-0" href="/en/profile/addresses/shipping" role="button">Shipping Addresses</a>
+							</div>
+							{/if}
+						</div>
+
+						<input type="hidden" name="idperson" value="{$value.idperson}">
+						<input type="hidden" name="idaddress" value="{$value.idaddress}">
+						<input type="hidden" name="tpaddress" value="{$value.tpaddress}">
+
+						<div class="form-group">
+							<div class="row pt-0">
+								<div class="col-12">
+									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address" value='{function="utf8encode($value.dsaddress)"}' {if="$action=='read'"}disabled{/if}>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number" value="{$value.dsnumber}" {if="$action=='read'"}disabled{/if}>
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code" value="{$value.cdzipcode}" {if="$action=='read'"}disabled{/if}>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pb-2">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City" value="{$value.dscity}" {if="$action=='read'"}disabled{/if}>
+								</div>
+								<div class="col-6">
+	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
+									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="España" disabled>
+								</div>
+							</div>
+
+							{if="$action=='edit'"}
+							<div class="form-group">
+								<div class="form-check form-check-inline custom-checkbox checkbox-greensea p-1 mt-4 mb-0">
+									<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S" {if="$value.fldefault=='S'"}checked{/if}>
+									<label class="form-check-label" for="fldefault">
+										Default <span class="legend">(if you want to use this address to billing and shipping)</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-12 d-flex justify-content-center">
+								<button type="button" class="btn btn-common col-2" formaction="/en/profile/addresses/{$type}/save" onclick="submitForm(this.form)">Save</button>
+								{break}
+							</div>
+							{/if}
+						</div>
+					</form>
+					{else}
+					<div class="row row1">
+						<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+							<h6>New</h6>
+						</div>
+
+						<div class="col-6 d-flex justify-content-end pt-0 mt-0" style="margin-bottom: 12px">
+							<a class="btn btn-default pt-0" href="/en/profile/addresses/billing" role="button">Billing Addresses</a>
+							<a class="btn btn-default pt-0" href="/en/profile/addresses/shipping" role="button">Shipping Addresses</a>
+						</div>
+					</div>
+
+					<form action="" method="post" class="profile-addresses-form" id="profile-addresses-form">
+						<input type="hidden" name="idperson" value="{$idperson}">
+						<input type="hidden" name="tpaddress" value={if="$type=='billing'"}B{else}S{/if}>
+
+						<div class="form-group">
+							<div class="row pt-0">
+								<div class="col-12">
+									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number">
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pb-2">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City">
+								</div>
+								<div class="col-6">
+	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
+									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="Spain" disabled>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-start p-1 mt-2 mb-0 ml-4">
+										<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S">
+										<label class="form-check-label" for="fldefault">
+											Default <span class="legend">(if you want to use this address to billing and shipping)</span>
+										</label>
+									</div>
+	
+									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-end pr-0 mt-2 mb-0 ml-1">
+										<input class="form-check-input" type="checkbox" name="flreplicate" id="flreplicate" value="S">
+										<label class="form-check-label" for="flreplicate">
+											 {if="$type=='billing'"}Shipping{else}Billing{/if} <span class="legend">(if you want to create this address for {if="$type=='billing'"}Shipping{else}Billing{/if} too)</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 d-flex justify-content-center">
+								<button type="button" class="btn btn-common col-2" formaction="/en/profile/addresses/{$type}/save" onclick="submitForm(this.form)">Save</button>
+							</div>
+						</div>
+					</form>
+					{/loop}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

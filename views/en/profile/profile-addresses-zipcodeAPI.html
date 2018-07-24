@@ -1,0 +1,221 @@
+<script>
+function remove(form) {
+	if (!confirm("Do you really want to delete this address?")) {
+		event.preventDefault()
+	}
+
+	form.submit();
+}
+
+function loadFromZipCode(form) {
+	let zipCode = '';
+
+	zipCode = $("#cdzipcode").val();
+
+	if (zipCode === '') {
+		alert("Postal code has to be informed.");
+		return;
+	}
+
+	form.action = "/en/zipcode/"+zipCode;
+	form.submit();
+}
+</script>
+
+{if="$action=='read'"}
+<section id="profile-addresses" class="wow fadeInUp">
+{else}
+<section id="profile-addresses-{$action}" class="wow fadeInUp">
+{/if}
+	<div class="form mb-4">
+		<div class="container">
+			<div class="row">
+				<div class="form-group col-12">
+					{if="$profileAddressSuccess != ''"}
+					<div id="success-message">
+						{$profileAddressSuccess}
+					</div>
+					{/if}
+	                
+					{if="$profileAddressError != ''"}
+					<div id="error-message">
+						{$profileAddressError}
+					</div>
+					{/if}                
+				</div>
+
+				<div class="section-header col-12">
+					<h2>Your Account</h2>
+				</div>
+
+				<div class="col-md-3 menu">
+					{include="profile-menu"}
+				</div>
+
+				<div class="col-md-9 field">
+					{loop="$addresses"}
+					<div class="row row{$counter+1}">
+						{if="$action=='read'"}
+						<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+							<h6>#{$key+1}</h6>
+							{if="$value.fldefault=='S'"}
+							<span>&nbsp (Default Address)</span>
+							{/if}
+						</div>
+
+						<div class="col-6 d-flex justify-content-end">
+							{if="$counter==0 || $action=='edit'"}
+							<a class="btn btn-default pt-0" href="/en/profile/addresses/new" role="button">New</a>
+							{/if}
+							<a class="btn btn-default pt-0" href="/en/profile/addresses/edit/{$value.idaddress}" role="button">Edit</a>
+							<a class="btn btn-default pt-0" href="/en/profile/addresses/delete/{$value.idaddress}" onclick="remove(this.form);" role="button">Delete</a>
+						</div>
+						{else}
+						<div class="col-12 d-flex justify-content-end mt-0" style="margin-bottom: 12px">
+							<a class="btn btn-default pt-0" href="/en/profile/addresses" role="button">Your Addresses</a>
+						</div>
+						{/if}
+					</div>
+
+					<form action="" method="post" class="profile-addresses-form" id="profile-addresses-form">
+						<input type="hidden" name="idperson" value="{$value.idperson}">
+						<input type="hidden" name="idaddress" value="{$value.idaddress}">
+
+						{if="$action=='read'"}
+						<div class="form-group">
+							<div class="row pt-0">
+								<div class="col-12">
+									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address" value='{function="utf8encode($value.dsaddress)"}' {if="$action=='read'"}disabled{/if}>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number" value="{$value.dsnumber}" {if="$action=='read'"}disabled{/if}>
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code" value="{$value.cdzipcode}" {if="$action=='read'"}disabled{/if}>
+								</div>
+							</div>
+						</div>
+						{else}
+						<div class="form-group">
+							<div class="row pt-0">
+								<div class="col-6">
+									<div class="row no-gutters pt-0">
+										<div class="col-8 mb-3">
+											<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code" value="{$value.cdzipcode}" {if="$action=='read'"}disabled{/if}>
+										</div>
+										<div class="col-4">
+											<button type="button" class="btn btn-common" onclick="loadFromZipCode(this.form);" style="margin-top: 4px">CP</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address" value='{function="utf8encode($value.dsaddress)"}' {if="$action=='read'"}disabled{/if}>
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number" value="{$value.dsnumber}" {if="$action=='read'"}disabled{/if}>
+								</div>
+							</div>
+						</div>
+						{/if}
+						<div class="form-group pb-2">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City" value="{$value.dscity}" {if="$action=='read'"}disabled{/if}>
+								</div>
+								<div class="col-6">
+	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
+									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="España" disabled>
+								</div>
+							</div>
+
+							{if="$action=='edit'"}
+							<div class="form-group">
+								<div class="form-check form-check-inline custom-checkbox checkbox-greensea p-1 mt-4 mb-0">
+									<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S" {if="$value.fldefault=='S'"}checked{/if}>
+									<label class="form-check-label" for="fldefault">
+										Default <span class="legend">(if you want to use this address to billing and shipping)</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-12 d-flex justify-content-center">
+								<button type="submit" class="btn btn-common col-2" formaction="/en/profile/addresses/save">Save</button>
+								{break}
+							</div>
+							{/if}
+						</div>
+					</form>
+					{else}
+					<div class="row row1">
+						<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+							<h6>New</h6>
+						</div>
+
+						<div class="col-6 d-flex justify-content-end">
+							<a class="btn btn-default pt-0" href="/en/profile/addresses" role="button">Addresses</a>
+						</div>
+					</div>
+
+					<form action="" method="post" class="profile-addresses-form" id="profile-addresses-form">
+						<input type="hidden" name="idperson" value="{$idperson}">
+
+						<div class="form-group">
+							<div class="row pt-0">
+								<div class="col-12">
+									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number">
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pb-2">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City">
+								</div>
+								<div class="col-6">
+	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
+									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="Spain" disabled>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="form-check form-check-inline custom-checkbox checkbox-greensea p-1 mt-4 mb-0">
+									<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S">
+									<label class="form-check-label" for="fldefault">
+										Default <span class="legend">(if you want to use this address to billing and shipping)</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-12 d-flex justify-content-center">
+								<button type="submit" class="btn btn-common col-2" formaction="/en/profile/addresses/save">Save</button>
+							</div>
+						</div>
+					</form>
+					{/loop}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

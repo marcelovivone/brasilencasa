@@ -12,8 +12,8 @@ class User extends Model
 {
 	
 	const SESSION = "User";
-	const SECRET = "1019019018452124";
-	const CIPHER = "aes-128-cbc";
+	const SECRET = "eHAo90184521osNk";
+	const CIPHER = "AES-128-CBC";
 	const ERROR = "UserError";
 	const ERROR_REGISTER = "UserErrorRegister";
 	const SUCCESS = "UserSuccess";
@@ -79,12 +79,12 @@ class User extends Model
 	{
 
 		$sql = new Sql();
-/*
-		$results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE u.dslogin = :LOGIN", array(
-			":LOGIN"=>$login
-		));
-*/
-		$results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE p.dsemail = :EMAIL", array(
+
+		$results = $sql->select(
+				"SELECT * 
+					FROM tb_users u 
+				  INNER JOIN tb_persons p ON u.idperson = p.idperson 
+				  WHERE u.dsemail = :EMAIL", array(
 			":EMAIL"=>$email
 		));
 
@@ -98,19 +98,22 @@ class User extends Model
 
 		if ($password === '')
 		{
+
 			return true;
+
 		} else {
+
 			$data = $results[0];
 
 			if (password_verify($password, $data["cdpassword"]))
 			{
-				
+
 				$user = new User($language);
 
-				$data['dsperson'] = utf8_encode($data['dsperson']);
+				$data['dsemail'] = utf8_encode($data['dsemail']);
 
 				$user->setData($data);
-				
+
 				$_SESSION[User::SESSION] = $user->getValues();
 
 				return $user;
@@ -122,66 +125,27 @@ class User extends Model
 				// do PHP) e não dentro do namespace corrente (\Tila\Model)
 //				throw new \Exception("Usuário inexistente ou senha inválida.", 1);
 				return false;
+
 			}
 		}
 	}
 
-	public static function verifyLogin($inadmin = true)
+	public static function verifyLogin($inadmin = true, $language)
 	{
 
 		if (!User::checkLogin($inadmin)) {
 			
 			if ($inadmin) {
 			
-				header("Location: /admin/login");
+				header("Location: /$language/admin/login");
 		
 			} else {
 
-				header("Location: /login");
+				header("Location: /$language/login");
 
 			}
 
 			exit;
-		}
-
-	}
-
-	public static function checkUser($email, $password)
-	{
-
-		$sql = new Sql();
-
-		$results = $sql->select("SELECT * FROM tb_users WHERE dsemail = :EMAIL", array(
-			":EMAIL"=>$email
-		));
-
-		if (count($results) === 0)
-		{
-			return false;
-		} else {
-
-			if ($password === ''){
-				return true;
-			} else {
-				$data = $results[0];
-
-				if (password_verify($password, $data["cdpassword"])) {
-
-					$user = new User($language);
-
-					$data['nmlast'] = utf8_encode($data['nmlast']);
-
-					$user->setData($data);
-					
-					$_SESSION[User::SESSION] = $user->getValues();
-
-					return $user;
-				} else {
-					return false;
-				}
-
-
-			}
 		}
 
 	}
@@ -196,7 +160,7 @@ class User extends Model
 
 		$sql = new Sql();
 
-		return $results = $sql->select("SELECT * FROM tb_users INNER JOIN tb_persons b USING(idperson) ORDER BY b.dsperson");
+		return $results = $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p USING(idperson) ORDER BY p.nmfirst, p.nmlast");
 
 	}
 
@@ -205,18 +169,18 @@ class User extends Model
 
 		$sql = new Sql();
 
-
-		$results = $sql->select("CALL sp_users_save (:dsperson, :dslogin, :cdpassword, :dsemail, :nrphone, :inadmin)", 
+		$results = $sql->select("CALL sp_users_save (:dsemail, :nmfirst, :nmlast, :cdpassword, :tptitle, :nrphone, :inadmin)",
 			array(
-			":dsperson"=>utf8_decode($this->getdsperson()),
-			":dslogin"=>$this->getdslogin(),
-			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
 			":dsemail"=>$this->getdsemail(),
+			":nmfirst"=>$this->getnmfirst(),
+			":nmlast"=>$this->getnmlast(),
+			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
+			":tptitle"=>$this->getptitle(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
 		));
 
-		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
+		// atribui o resultado no próprio objeto, para o caso de quem chamou necessitar do resultado
 		$this->setData($results[0]);
 
 	}
@@ -234,7 +198,7 @@ class User extends Model
 
 			$data = $results[0];
 
-			$data['dsperson'] = utf8_encode($data['dsperson']);
+			$data['nmfirst'] = utf8_encode($data['nmfirst']);
 
 		}
 
@@ -247,18 +211,19 @@ class User extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_usersupdate_save (:iduser, :dsperson, :dslogin, :cdpassword, :dsemail, :nrphone, :inadmin)", 
+		$results = $sql->select("CALL sp_usersupdate_save (:iduser, :dsemail, :nmfirst, :nmlast, :cdpassword, :tptitle, :nrphone, :inadmin)", 
 			array(
 			":iduser"=>$this->getiduser(),
-			":dsperson"=>utf8_decode($this->getdsperson()),
-			":dslogin"=>$this->getdslogin(),
-			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
 			":dsemail"=>$this->getdsemail(),
+			":nmfirst"=>$this->getnmfirst(),
+			":nmlast"=>$this->getnmlast(),
+			":cdpassword"=>User::getPasswordHash($this->getcdpassword()),
+			":tptitle"=>$this->gettptitle(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
 		));
 
-		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
+		// atribui o resultado no próprio objeto, para o caso de quem chamou necessitar do resultado
 		$this->setData($results[0]);
 
 	}
@@ -285,9 +250,9 @@ class User extends Model
 
 		$results1 = $sql->select("
 			SELECT * 
-			  FROM tb_persons a
-			 INNER JOIN tb_users b USING(idperson)
-			 WHERE a.dsemail = :email;",
+			  FROM tb_persons p
+			 INNER JOIN tb_users u USING(idperson)
+			 WHERE u.dsemail = :email;",
 			 array(
 			 	":email"=>$email
 			 ));
@@ -322,35 +287,63 @@ class User extends Model
 			// pesquisar qual maneira é a mais segura
 //			$key = openssl_random_pseudo_bytes(USER::SECRET);
 			$key = USER::SECRET;
+			$count=0;
+			$iv ="";
+			$code = "";
 
-			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(USER::CIPHER));
+			while (true) {
+				$count++;
 
-			$code = base64_encode(openssl_encrypt($dataRecovery["idrecovery"], USER::CIPHER, $key, 0, $iv));
-			$iv = base64_encode($iv);
+				if ($count > 200) {
+					break;
+				}
+	
+				$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(USER::CIPHER));
+				if ($iv === "" || mb_strpos($iv, " ") || mb_strpos($iv, "+")) {
+					continue;
+				}
+
+				$iv64 = base64_encode($iv);
+				if (mb_strpos($iv64, " ") || mb_strpos($iv64, "+")) {
+					continue;
+				}
+
+				$code = openssl_encrypt($dataRecovery["idrecovery"], USER::CIPHER, $key, OPENSSL_RAW_DATA, $iv);
+				if ($code === "" || mb_strpos($code, " ") || mb_strpos($code, "+")) {
+					continue;
+				}
+
+				$code64 = base64_encode($code);
+				if (mb_strpos($code64, " ") || mb_strpos($code64, "+")) {
+					continue;
+				}
+
+				break;
+			}
 
 			// se o método foi chamado a partir da área de administração
 			// calling origin is the administrative section
 			if ($inadmin === true) {
 				
-				$link = "http://www.brasilencasa.com/$language/admin/forgot/reset?code=$code&iv=$iv";
+				$link = "http://www.brasilencasa.com/$language/admin/forgot/reset?code=$code64&iv=$iv64";
 
 			// se o método foi chamado a partir da área de loja
 			// calling origin is the store section
 			} else {
 
-				$link = "http://www.brasilencasa.com/$language/forgot/reset?code=$code&iv=$iv";
+				$link = "http://www.brasilencasa.com/$language/forgot/reset?code=$code64&iv=$iv64";
 
 			}
 
 			$mailer = new Mailer(
 				$data["dsemail"], 
-				$data["dsperson"], 
+				$data["nmlast"], 
 				($language === "en" ? "br-Casa - Password Assistance" :
 					($language === "es" ? utf8_decode("br-Casa - Ayuda de Contraseña") :
 						($language === "pt" ? utf8_decode("br-Casa - Auxílio de Senha") : "br-Casa - Password Assistance"))), 
 				"forgot", 
 				array(
-					"name"=>$data["dsperson"],
+					"name"=>$data["nmlast"],
 					"link"=>$link
 			));
 
@@ -359,6 +352,7 @@ class User extends Model
 			return $data;
 
 		}
+
 
 	}
 
@@ -369,8 +363,9 @@ class User extends Model
 		$key = USER::SECRET;
 
 		$iv = base64_decode($iv);
+		$code = base64_decode($code);
 
-		$idrecovery = openssl_decrypt(base64_decode($code), USER::CIPHER, $key, 0, $iv);
+		$idrecovery = openssl_decrypt($code, USER::CIPHER, $key, OPENSSL_RAW_DATA, $iv);
 
 		$sql = new Sql();
 
@@ -415,7 +410,7 @@ class User extends Model
 		$sql = new Sql();
 
 		$sql->query("UPDATE tb_users SET cdpassword = :password WHERE iduser = :iduser", array(
-			":password"=>$password,
+			":password"=>User::getPasswordHash($password),
 			":iduser"=>$this->getiduser()
 		));
 
@@ -470,18 +465,16 @@ class User extends Model
 
 	}
 
-	public static function checkLoginExist($login)
+	public static function checkLoginExist($email)
 	{
 
 		$sql = new Sql();
 
 		$results = $sql->select("
 			SELECT * 
-			  FROM tb_users u 
-			 INNER JOIN tb_persons p USING(idperson) 
-			 WHERE u.dslogin = :dslogin OR 
-			 	   p.dsemail = :dslogin", [
-			':dslogin'=>$login
+			  FROM tb_users
+			 WHERE dsemail = :dsemail", [
+			':dsemail'=>$email
 		]);
 
 		return (count($results) > 0);
@@ -505,13 +498,58 @@ class User extends Model
 			SELECT *
 			  FROM tb_orders o
 			 INNER JOIN tb_ordersstatus s USING (idstatus)
+			 INNER JOIN tb_ordersstatus_translate t ON s.idstatus = t.idstatus AND
+			 										   t.cdlanguage = :cdlanguage
 			 INNER JOIN tb_carts c USING (idcart)
 			 INNER JOIN tb_users u ON u.iduser = o.iduser
 			 INNER JOIN tb_addresses a USING (idaddress)
 			 INNER JOIN tb_persons p ON p.idperson = u.idperson
 			 WHERE o.iduser = :iduser
+			 ORDER BY o.dtregister DESC
 		", [
-			':iduser'=>$this->getiduser()
+			":iduser"=>$this->getiduser(),
+			":cdlanguage"=>$this->getLanguage()
+		]);
+
+		return $results;
+
+	}
+
+	public function getAddresses($tpaddress) {
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT *
+			  FROM tb_addresses 
+			 WHERE idperson = :idperson AND
+			 	   tpaddress = :tpaddress
+		  ORDER BY fldefault DESC,
+			 	   dtregister DESC
+		", [
+			":idperson"=>$this->getidperson(),
+			":tpaddress"=>$tpaddress
+		]);
+
+		return $results;
+
+	}
+
+	public function getWishlist() {
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT *
+			  FROM tb_wishlist w
+			 INNER JOIN tb_products p USING (idproduct)
+			 INNER JOIN tb_products_translate t ON p.idproduct = t.idproduct AND
+			 									   t.cdlanguage = :cdlanguage
+			 WHERE w.iduser = :iduser
+			 ORDER BY w.dtregister DESC
+		", [
+			":iduser"=>$this->getiduser(),
+			":cdlanguage"=>$this->getLanguage()
 		]);
 
 		return $results;
@@ -554,7 +592,7 @@ class User extends Model
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_users u
 			 INNER JOIN tb_persons p USING(idperson) 
-			 ORDER BY p.dsperson
+			 ORDER BY p.nmfirst, p.nmlast
 			 LIMIT $start, $itemPerPage;
 		");
 
@@ -579,8 +617,11 @@ class User extends Model
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_users u
 			 INNER JOIN tb_persons p USING(idperson) 
-			 WHERE p.dsperson LIKE :searchLike OR p.dsemail = :search OR u.dslogin LIKE :searchLike
-			 ORDER BY p.dsperson
+			 WHERE p.nmfirst LIKE :searchLike OR 
+			 		 p.nmlast LIKE :searchLike OR 
+			 		 p.dsemail = :search
+			 ORDER BY p.nmfirst,
+			 			 p.nmlast
 			 LIMIT $start, $itemPerPage;
 		", [
 			':search'=>$search,

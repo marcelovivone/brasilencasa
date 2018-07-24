@@ -20,7 +20,7 @@ class Category extends Model
 							  		t.cdlanguage = UPPER(:cdlanguage) 
 						   ORDER BY $order", 
 			array(
-			":cdlanguage"=>$this->cdLanguage,
+			":cdlanguage"=>$this->getLanguage(),
 		));
 
 	}
@@ -30,10 +30,10 @@ class Category extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_categories_save (:idcategory, :descategory)", 
+		$results = $sql->select("CALL sp_categories_save (:idcategory, :dscategory)", 
 			array(
 			":idcategory"=>$this->getidcategory(),
-			":descategory"=>$this->getdescategory()
+			":dscategory"=>$this->getdscategory()
 		));
 
 		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
@@ -62,10 +62,10 @@ class Category extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_categories_save (:idcategory, :descategory)", 
+		$results = $sql->select("CALL sp_categories_save (:idcategory, :dscategory)", 
 			array(
 			":idcategory"=>$this->getidcategory(),
-			":descategory"=>$this->getdescategory()
+			":dscategory"=>$this->getdscategory()
 		));
 
 		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
@@ -101,7 +101,7 @@ class Category extends Model
 		$html = [];
 
 		foreach ($categories as $row) {
-			array_push($html, '<li><a href="/categories/'.$row['idcategory'].'">'.$row['descategory'].'</a></li>');
+			array_push($html, '<li><a href="/categories/'.$row['idcategory'].'">'.$row['dscategory'].'</a></li>');
 		}
 
 		file_put_contents($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "categories-menu.html", implode("", $html));

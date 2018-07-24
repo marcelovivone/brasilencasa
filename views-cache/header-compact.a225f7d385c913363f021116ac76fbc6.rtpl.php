@@ -17,8 +17,10 @@
 		<link rel="stylesheet" type="text/css" href="/assets/css/responsive.css">
 		<!--Fonts-->
 		
-<!--		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
--->		<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.5.0.13.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<!--
+		<link rel="stylesheet" href="/assets/css/fontawesome/fontawesome.5.1.1.css">
+-->
 
 		<link rel="stylesheet" media="screen" href="/assets/fonts/simple-line-icons.css">    
 		 
@@ -58,11 +60,8 @@
 						</ul>
 
 						<ul class="navbar-nav ml-auto">
-							<li class="nav-item ml-xs-0">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
-							</li>                                     
 							<li class="nav-item">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/wishlist'><i class="fa fa-heart"></i> <span class="roof-description"> Wishlist</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile/wishlist'><i class="fa fa-heart"></i> <span class="roof-description"> Wishlist</span></a>
 							</li>                                     
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/cart'><i class="fa fa-shopping-cart"></i> <span class="roof-description"> Cart</span></a>
@@ -75,6 +74,9 @@
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/logout'><i class="fa fa-close"></i> <span class="roof-description"> Logout</span></a>
 							</li>                                     
 							<?php }else{ ?>
+							<li class="nav-item ml-xs-0">
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
+							</li>                                     
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/login'><i class="fa fa-lock"></i> <span class="roof-description">Login</span></a>
 							</li>

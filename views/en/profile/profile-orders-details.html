@@ -1,0 +1,109 @@
+<style>
+@media screen {
+	.print-title {
+		display: none;
+	}
+}
+
+@media print {
+	header,
+	.screen,
+	.menu,
+	#payment,
+	footer {
+		display:none!important;
+	}
+
+	.print-title {
+		display: block;
+		padding-top: 60px;
+	}
+
+	.field {
+		width: 100%!important;
+		margin: 0 auto;
+		margin-top: 20px;
+	}
+}
+</style>
+
+<section id="profile-orders-details" class="wow fadeInUp">
+	<div class="container">
+		<div class="row">
+			<div class="section-header col-12 screen">
+				<h2>Your Account</h2>
+			</div>
+
+			<div class="section-header col-12 print-title">
+				<h2>Brasil en Casa</h2>
+				<h4>Order #{$order.idorder} - Details</h4>
+			</div>
+
+			<div class="col-md-3 menu">
+				{include="profile-menu"}
+			</div>
+
+			<div class="col-md-9 field">
+					<table class="table ">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col" class="number">Price</th>
+								<th scope="col" class="number">Quantity</th>
+								<th scope="col" class="number">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop="$products"}
+							<tr>
+								<td>
+									{$value.nmproduct}
+								</td>
+								<td class="number">
+									{function="formatEU($value.vlprice)"} €
+								</td>
+								<td class="number">
+									{$value.nrquantidade}
+								</td>
+								<td class="number">
+									{function="formatEU($value.vlprice * $value.nrquantidade)"} €
+								</td>
+							</tr>
+							{/loop}
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>Total before Shipping & Handling</th>
+								<td></td>
+								<td class="number">{$cart.nrquantidadesubtotal}</td>
+								<td class="number">{function="formatEU($cart.vlsubtotal)"} €</td>
+							</tr>
+							<tr class="shipping">
+								<th>Shipping & Handling</th>
+								<td></td>
+								<td></td>
+								<td class="number">
+									{function="formatEU($cart.vlfreight)"} €
+									<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
+								</td>
+							</tr>
+							<tr class="order-total">
+								<th>Total for This Order</th>
+								<td></td>
+								<td></td>
+								<td class="number"><strong><span class="amount">{function="formatEU($cart.vltotal)"} €</span></strong></td>
+							</tr>
+						</tfoot>
+					</table>
+					<div id="payment">
+						<div class="form-row place-order">
+							<div class="col-12 d-flex justify-content-center">
+								<input type="submit" value="Print" class="btn btn-common col-8" onclick="window.print()">
+							</div>
+						</div>
+					</div>
+
+			</div>
+		</div>
+	</div>
+</section>

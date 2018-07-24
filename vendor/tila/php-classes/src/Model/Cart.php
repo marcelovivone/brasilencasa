@@ -36,7 +36,7 @@ class Cart extends Model
 
 				// criar carrinho novo
 				$data = [
-					'dessessionid'=>session_id()
+					'dssessionid'=>session_id()
 				];
 
 				// verifica se a rota não é de administração
@@ -76,8 +76,8 @@ class Cart extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM tb_carts WHERE dessessionid = :dessessionid", [
-			':dessessionid'=>session_id()
+		$results = $sql->select("SELECT * FROM tb_carts WHERE dssessionid = :dssessionid", [
+			':dssessionid'=>session_id()
 		]);
 
 		if (count($results) > 0) {
@@ -110,11 +110,11 @@ class Cart extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_carts_save(:idcart, :dessessionid, :iduser, :deszipcode, :vlfreight, :nrdays)", [
+		$results = $sql->select("CALL sp_carts_save(:idcart, :dssessionid, :iduser, :dszipcode, :vlfreight, :nrdays)", [
 			':idcart'=>$this->getidcart(), 
-			':dessessionid'=>$this->getdessessionid(), 
+			':dssessionid'=>$this->getdssessionid(), 
 			':iduser'=>$this->getiduser(), 
-			':deszipcode'=>$this->getdeszipcode(), 
+			':dszipcode'=>$this->getdszipcode(), 
 			':vlfreight'=>$this->getvlfreight(), 
 			':nrdays'=>$this->getnrdays()
 		]);
@@ -128,10 +128,10 @@ class Cart extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_categories_save (:idcategory, :descategory)", 
+		$results = $sql->select("CALL sp_categories_save (:idcategory, :dscategory)", 
 			array(
 			":idcategory"=>$this->getidcategory(),
-			":descategory"=>$this->getdescategory()
+			":dscategory"=>$this->getdscategory()
 		));
 
 		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
@@ -192,36 +192,42 @@ class Cart extends Model
 
 		$sql = new Sql();
 
+//		$rows = $sql->select("
+//			SELECT p.idproduct,
+//		  		   pt.nmproduct,
+//		  		   p.vlprice,
+//		  		   p.vlwidth, 
+//		  		   p.vlheight, 
+//		  		   p.vllength,
+//		  		   p.vlweight,
+//		  		   pt.dsurl,
+//		  		   COUNT(*) AS nrqtd,
+//		  		   SUM(p.vlprice) AS vltotal
 		$rows = $sql->select("
 			SELECT p.idproduct,
-		  		   p.desproduct,
+		  		   pt.nmproduct,
 		  		   p.vlprice,
 		  		   p.vlwidth, 
 		  		   p.vlheight, 
 		  		   p.vllength,
 		  		   p.vlweight,
-		  		   p.desurl,
-		  		   COUNT(*) AS nrqtd,
-		  		   SUM(p.vlprice) AS vltotal
+		  		   pt.dsurl,
+		  		   c.nrquantidade,
+		  		   p.vlprice
 			  FROM tb_cartsproducts c
 			 INNER JOIN tb_products p ON c.idproduct = p.idproduct
+             INNER JOIN tb_products_translate pt ON p.idproduct = pt.idproduct AND
+													pt.cdlanguage = :cdlanguage
 			 WHERE c.idcart = :idcart AND
 			 	   c.dtremoved IS NULL
-		  GROUP BY p.idproduct,
-		  		   p.desproduct,
-		  		   p.vlprice,
-		  		   p.vlwidth, 
-		  		   p.vlheight, 
-		  		   p.vllength,
-		  		   p.vlweight,
-		  		   p.desurl
-		  ORDER BY p.desproduct
+		  ORDER BY pt.nmproduct
 		  ", [
-		  	':idcart'=>$this->getidcart()
+		  	":idcart"=>$this->getidcart(),
+		  	":cdlanguage"=>$this->getLanguage()
 		  ]);
 
 		// inclui as fotos do produto às linhas do array
-		return Product::checkList($rows);
+		return Product::checkList($rows, $this->getLanguage());
 	}
 
 	public function getProductsTotals()
@@ -229,13 +235,20 @@ class Cart extends Model
 
 		$sql = new Sql();
 
+//		$results = $sql->select("
+//			SELECT SUM(vlprice) AS vlprice,
+//				   SUM(vlwidth) AS vlwidth,
+//				   SUM(vlheight) AS vlheight,
+//				   SUM(vllength) AS vllength,
+//				   SUM(vlweight) AS vlweight,
+//				   COUNT(*) AS nrqtd
 		$results = $sql->select("
-			SELECT SUM(vlprice) AS vlprice,
-				   SUM(vlwidth) AS vlwidth,
-				   SUM(vlheight) AS vlheight,
-				   SUM(vllength) AS vllength,
-				   SUM(vlweight) AS vlweight,
-				   COUNT(*) AS nrqtd
+			SELECT SUM(vlprice*nrquantidade) AS vlpricesubtotal,
+				   SUM(vlwidth*nrquantidade) AS vlwidthsubtotal,
+				   SUM(vlheight*nrquantidade) AS vlheightsubtotal,
+				   SUM(vllength*nrquantidade) AS vllengthsubtotal,
+				   SUM(vlweight*nrquantidade) AS vlweightsubtotal,
+				   SUM(nrquantidade) AS nrquantidadesubtotal
 			  FROM tb_products p
 			 INNER JOIN tb_cartsproducts c ON p.idproduct = c.idproduct
 			 WHERE c.idcart = :idcart AND
@@ -306,7 +319,7 @@ class Cart extends Model
 
 			$this->setnrdays($result->PrazoEntrega);
 			$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
-			$this->setdeszipcode($nrzipcode);
+			$this->setdszipcode($nrzipcode);
 
 			$this->save();
 
@@ -356,9 +369,9 @@ class Cart extends Model
 	{
 
 		// atualiza o valor do frete na página apenas se o zipcode tiver sido informado
-		if ($this->getdeszipcode() != ''){
+		if ($this->getdszipcode() != ''){
 
-			$this->setFreight($this->getdeszipcode());
+			$this->setFreight($this->getdszipcode());
 
 		}
 
@@ -384,8 +397,9 @@ class Cart extends Model
 
 		$totals = $this->getProductsTotals();
 
-		$this->setvlsubtotal($totals['vlprice']);
-		$this->setvltotal($totals['vlprice'] + $this->getvlfreight());
+		$this->setnrquantidadesubtotal($totals['nrquantidadesubtotal']);
+		$this->setvlsubtotal($totals['vlpricesubtotal']);
+		$this->setvltotal($totals['vlpricesubtotal'] + $this->getvlfreight());
 
 	}
 

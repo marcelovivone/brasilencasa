@@ -79,17 +79,6 @@ $(function(){
         {
             if ( element.is(":radio") ) 
             {
-/*
-				var parentEls = $(element).parents()
-				.map(function() {
-					console.log(this.tagName);
-					return this.tagName;
-				})
-				.get()
-				.join( ", " );
-
-				$(element).append( "<strong>" + parentEls + "</strong>" );
-*/
                 error.appendTo( element.parents('.validate') );
             }
             else 
@@ -97,10 +86,7 @@ $(function(){
                 error.insertAfter( element );
             }
          }
-/*		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
-		}
-*/	});
+	});
 
 	// store/contact.html file
 	$('#contact-form').validate({
@@ -162,13 +148,197 @@ $(function(){
 			$(label).closest('.control-group').addClass('error');
 		}
 	});
+
+	// store/profile.html file
+	$('#profile-form').validate({
+		ignore: '.ignore',
+		rules: {
+			'firstname': {
+				required: true,
+				maxlength: 30
+			},
+			'lastname': {
+				required: true,
+				maxlength: 90
+			},
+			'email': {
+				required: true,
+				email: true
+			},
+			'title': {
+				required: true
+			}
+		},
+		errorPlacement: function(error, element) 
+        {
+            if ( element.is(":radio") ) 
+            {
+                error.appendTo( element.parents('.validate') );
+            }
+            else 
+            { // This is the default behavior 
+                error.insertAfter( element );
+            }
+         }
+	});
+
+	// store/profile-change-password.html file
+	$('#profile-change-password-form').validate({
+		ignore: '.ignore',
+		rules: {
+			'current-password': {
+				required: true
+			},
+			'newpassword': {
+				required: true,
+				minlength: 8,
+				maxlength: 20,
+				'regex-password': /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+			},
+			'new-password-confirm': {
+				required: true,
+		      	equalTo: '#newpassword'
+			}
+		},
+		highlight: function(label) {
+			$(label).closest('.control-group').addClass('error');
+		}
+	});
+
+	// store/profile-addresses.html file
+	$('#profile-addresses-form').validate({
+		ignore: '.ignore',
+		rules: {
+			dsaddress: {
+				required: true,
+				maxlength: 128
+			},
+			dsnumber: {
+				required: true,
+				maxlength: 6
+			},
+			cdzipcode: {
+				required: true,
+				maxlength: 5
+			},
+			dscity: {
+				required: true,
+				maxlength: 32
+			},
+			dscountry: {
+				required: true,
+				maxlength: 32
+			}
+		},
+		highlight: function(label) {
+			$(label).closest('.control-group').addClass('error');
+		}
+	});
+
+	if (document.getElementById('profile')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-data').classList.add('active');
+
+	} else if (document.getElementById('profile-change-password')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-password').classList.add('active');
+
+	} else if (document.getElementById('profile-billing-addresses')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-billing-addresses').classList.add('active');
+
+	} else if (document.getElementById('profile-shipping-addresses')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses').classList.add('active');
+
+	} else if (document.getElementById('profile-billing-addresses-new')) {
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-new').classList.add('active');
+		document.getElementById('profile-menu-billing-addresses-new').hidden = false;
+
+	} else if (document.getElementById('profile-billing-addresses-edit')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').classList.add('active');
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = false;
+
+	} else if (document.getElementById('profile-shipping-addresses-new')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').classList.add('active');
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = false;
+
+	} else if (document.getElementById('profile-shipping-addresses-edit')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').classList.add('active');
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = false;
+
+	} else if (document.getElementById('profile-payment-methods')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-payment-methods').classList.add('active');
+
+	} else if (document.getElementById('profile-orders')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-orders').classList.add('active');
+
+	} else if (document.getElementById('profile-orders-details')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').classList.add('active');
+		document.getElementById('profile-menu-orders-details').hidden = false;
+
+	} else if (document.getElementById('profile-wishlist')) {
+		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
+		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-new').hidden = true;
+		document.getElementById('profile-menu-shipping-addresses-edit').hidden = true;
+		document.getElementById('profile-menu-orders-details').hidden = true;
+		document.getElementById('profile-menu-wishlist').classList.add('active');
+	}
 });
 
 // store email and password checking
 function checkUser(emailName, passwordName, language, newUser, callback){
-	let email = jQuery.trim(document.getElementById(emailName).value);
-	let password = '';
+	let email = '';
+	if (emailName !== '') email = jQuery.trim(document.getElementById(emailName).value);
 
+	let password = '';
 	if (passwordName !== '') password = jQuery.trim(document.getElementById(passwordName).value);
 
 	jQuery.ajax({
@@ -190,6 +360,8 @@ function checkUser(emailName, passwordName, language, newUser, callback){
 function submitFinal(form, submit) {
 	if (submit){
 		$(form).submit();
+	} else {
+		return true;
 	}
 
 	document.getElementById('error-message').style.display = "none";
@@ -249,33 +421,42 @@ function validateForm(form, submit, emailName, passwordName, language, newUser) 
 	$(form).validate();
 
 	if($(form).valid()){
+		let msg = '';
 
 		if (emailName !== ''){
-			let msg = '';
 			checkUser(emailName, passwordName, language, newUser, function(data){
 
 				if(data === 'false' && !newUser){
 
 					switch (language) {
 						case 'en':
+						
 							if (passwordName === '') {
 								msg = 'Unregistered email.';
+							} else if (emailName === 'hide-email') {
+								msg = 'Current password is invalid.';
 							} else {
 								msg = 'Unregistered email or incorrect password.';
 							}
 							break;
 
 						case 'es':
+						
 							if (passwordName === '') {
 								msg = 'E-mail no registrado.';
+							} else if (emailName === 'hide-email') {
+								msg = 'Contrase\u00f1a actual no es v\u00e1lida.';
 							} else {
 								msg = 'E-mail no registrado o contrase\u00f1a incorrecta.';
 							}
 							break;
 
 						case 'pt':
+
 							if (passwordName === '') {
 								msg = 'E-mail n\u00e3o cadastrado.';
+							} else if (emailName === 'hide-email') {
+								msg = 'Senha atual n\u00e3o \u00e9 v\u00e1lida.';
 							} else {
 								msg = 'E-mail n\u00e3o cadastrado ou senha incorreta.';
 							}
@@ -316,6 +497,7 @@ function validateForm(form, submit, emailName, passwordName, language, newUser) 
 		} else {
 			return submitFinal(form, submit);
 		}
+
 	} else {
 		return false;
 	}

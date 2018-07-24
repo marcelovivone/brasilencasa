@@ -27,7 +27,7 @@ class SubCategory extends Model
 						   ORDER BY sc.nmcategory ASC,
 						   			st.nmsubcategory ASC", 
 			array(
-			":cdlanguage"=>$this->cdLanguage
+			":cdlanguage"=>$this->getLanguage()
 		));
 
 	}
@@ -46,7 +46,7 @@ class SubCategory extends Model
 							  		s.idcategory = :idCategory 
 						   ORDER BY $order", 
 			array(
-			":cdlanguage"=>$this->cdLanguage,
+			":cdlanguage"=>$this->getLanguage(),
 			":idCategory"=>$idCategory
 		));
 

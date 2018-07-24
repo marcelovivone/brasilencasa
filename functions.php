@@ -12,6 +12,13 @@ function formatEU($vlunformat)
 
 }
 
+function utf8encode($string)
+{
+
+	return utf8_encode($string);
+
+}
+
 function formatDate($date)
 {
 
@@ -31,7 +38,7 @@ function getUserName($language)
 
 	$user = User::getFromSession($language);
 
-	return $user->getdesperson();
+	return $user->getnmfirst();
 
 }
 

@@ -8,10 +8,10 @@ use \Tila\Model;
 class OrderStatus extends Model
 {
 
-	const EM_ABERTO = 1;
-	const AGUARDANDO_PAGAMENTO = 2;
-	const PAGO = 3;
-	const ENTREGUE = 4;
+	const OPEN = 1;
+	const AWAYTING_PAYMENT = 2;
+	const PAID_OUT = 3;
+	const DELIVERED = 4;
 
 	public static function listAll()
 	{
@@ -25,8 +25,6 @@ class OrderStatus extends Model
 		");
 
 	}
-
-
 
 }
 

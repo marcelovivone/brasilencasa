@@ -16,7 +16,7 @@
 					</div>
 
 					<div class="col-12 d-flex justify-content-center">
-						<button type="button" class="btn btn-common col-6" onclick="validateForm(this.form, true, 'email', '', 'en', false)">Send Message</button>
+						<button type="button" class="btn btn-common col-2" onclick="validateForm(this.form, true, 'email', '', 'en', false)">Send Message</button>
 					</div>
 				</form>
 			</div>

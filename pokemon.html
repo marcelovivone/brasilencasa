@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!--
+
+TESTE FUNCIONAL
+
+#	INPUT 														OUTPUT
+-------------------------------------------------------------------------------
+1	E 															1 POK
+2	NESO 														4 POK
+3	NSNSNSNSNS													2 POK
+4	NESOONESSENOOSEN											9 POK
+5	OSENOEOEONSOOOSENNEESSOOOENS								13 POK
+6	EESSENOOENNNOOEOSSENNNOSSSSEEENOOO							18 POK
+7	ONONENOOSESOSNESEESOOONSEESSONONNNNNNSSESESESSSENO			27 POK
+
+TESTE DE CARGA
+#	INPUT 										OUTPUT 			TIME of EXEC
+-------------------------------------------------------------------------------
+8	3.911.692 (INPUT em arquivo txt anexo)		1.223.133 POK 	3 sec (approximately)
+
+-->
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<!-- Viewport Meta Tag -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		Pokemon Capture
+	</title>
+</head>
+
+<body>
+	<style>
+		body {
+  			background: #fff;
+  			color: #3c3c3e;
+			font-family: "Open Sans";
+		}
+
+		#title {
+    		margin: 0 0 2em;
+    		padding: 0.5em;
+    		text-align: center;
+    		color: white;
+    		background: #4c5059;
+		}
+		
+		#wrapper {
+    		max-width: 94%;
+    		margin: auto;
+		}
+
+		label {
+    		display: inline-block;
+    		margin-bottom: 1em;
+    		color: #848484;
+    		width: 5%;
+		}
+
+		input {
+  			font-size: .875em;
+  			padding: .3125em;
+  			width: 50%;
+		}
+
+		div {
+			margin-top: 1.25em;
+		}
+
+		span {
+    		display: block;
+    		font-style: italic;
+    		text-align: center;
+    		margin-top: 1em;
+    		color: #a7aaa9;
+		}
+
+		p {
+			color: #999;
+			width: 65%;
+			margin-top: -.5em;
+		}
+
+		.center {
+			text-align: center;
+			width: 100%;
+		}
+
+		button {
+    		margin-top: 1em;
+    		padding: .3125em;
+    		width: 30%;
+    		border-radius: .125em;
+    		font-size: 1.1em;
+    		color: white;
+    		background-color: #7bc4a4;
+		}
+
+		button:disabled {
+    		background: #dddddd;
+    	}
+	</style>
+
+	<section id="pokemon">
+		<h1 id="title">Pokemon Capture</h1>
+		<div id="wraper">
+
+			<!-- input data -->
+			<div class="input center">
+				<label for="input">Input</label>
+				<input type="text" id="input" min="1" pattern="[ENSO]{1,}" title="N, E, S, O chars only" oninput="this.value = this.value.toUpperCase()" onblur="check(this)"/>
+				<p><small>N, E, S, O chars only.</small></p>
+			</div>
+
+			<!-- Number of characteres digited -->
+			<div class="counter center">
+				<label for="counter">Counter</label>
+				<input type="text" id="counter" disabled/>
+			</div>
+
+			<!-- Output data (number of pokemons caught) -->
+			<div class="output center">
+				<label for="output">Output</label>
+				<input type="text" id="output" disabled/>
+			</div>
+
+			<!-- button to execute the algorithm -->
+			<div class="button center">
+				<button type="button" id="start" onclick="run()" disabled>Start</button>
+			</div>
+		</div>
+	</section>
+
+	<script type="text/javascript">
+		'use strict';
+
+		let input = '';		// Data from input element (informed by user)
+		let step = '';		// Current char inside the repetition
+		let output = '';	// Data to show to the user ate the end of execution
+		let ltd = 0;		// Current latitude inside the repetition
+		let hghLtd = 0;		// Current higher latitude inside the repetition
+		let lowLtd = 0;		// Current lower latitude inside the repetition
+		let lng = 0;		// Current longitude inside the repetition
+		let wstLng = 0;		// Current western longitude inside the repetition
+		let estLng = 0;		// Current eastern longitude inside the repetition
+		let pkm = 1;		// Number of pokemons caught (start in 1 refering the initial house)
+		let cdn = [];		// Array of visited coordinates (in terms of latitude and longitude)
+		cdn[0] = [0];		// Array dimension for latitude (initial condition refering the initial house)
+		cdn[0][0] = 0;		// Array dimension for longitude (initial condition refering the initial house)
+							// * Javascript doesn't work with bidimensional arrays. 
+							// So the solution implemented was to create an array (longitude) 
+							// for each position of the basis array (latitude)
+
+		// Deals with data from input (called from input onbluer)
+		function check(el) {
+
+			// Data ok (according to the input pattern validation)
+    		if (el.checkValidity()) {
+				document.getElementById('start').disabled = false
+				document.getElementById('counter').value = `${el.value.length} character(s) entered`;
+			
+				// Input empty
+				if (el.value === ''){
+					document.getElementById('start').disabled = true
+				}
+
+			// Data not ok
+			} else {
+				alert('Please, you must enter N, E, S, O chars only');
+				document.getElementById('start').disabled = true
+    		}
+		}
+
+		// Creates new array position 
+		function arrayPush() {
+
+			// new position
+	 		if (!cdn[ltd]) {
+	 			cdn[ltd] = [];
+	 		}
+
+			cdn[ltd][lng] = 0;
+
+			// Increases the pokemon's counter 
+			pkm++;
+		}
+
+		// Horizontal step (heading east or west)
+		function stepLng() {
+
+			// First time at the current western or eastern longitude
+			if ((step === 'O' && lng < wstLng) ||
+				(step === 'E' && lng > estLng)) {
+
+				// Deals with array
+		 		arrayPush();
+
+				// Set a new eastern or western boundary
+				step === 'O' ? wstLng = lng : estLng = lng;
+
+			// Have visited before
+			} else {
+
+				// New horizontal frontier
+				if (cdn[ltd][lng] !== 0) {
+					// Deals with array
+			 		arrayPush();
+				}
+			}
+		}
+
+		// Vertical step (heading up or down)
+		function stepLtd() {
+
+			// First time at the current northern or southern latitude
+			if ((step === 'N' && ltd > hghLtd) ||
+				(step === 'S' && ltd < lowLtd)) {
+
+				// Deals with array
+		 		arrayPush();
+
+				// Set a new eastern or western boundary
+				step === 'N' ? hghLtd = ltd : lowLtd = ltd;
+
+			// Have visited before
+			} else {
+
+				// New vertical frontier
+				if (!cdn[ltd]) {
+
+					// Deals with array
+			 		arrayPush();
+
+					// Set a new eastern or western boundary
+					step === 'N' ? hghLtd = ltd : lowLtd = ltd;
+
+				// Vertical line had been visited before
+				} else {
+
+					// Horizontal validation
+					stepLng();
+				}
+			}
+		}
+
+		// Executes the algorithm (called from button "start")
+		function run() {
+
+			// Getting input data (informed by the user)
+			input = document.getElementById('input').value;
+
+			if (input === '') {
+				alert("Please informe the sequence of characters");
+				return;
+			}
+
+			// Reads each (one at a time) char from the sequence entered by the user
+			for (let i = 0 ; i < input.length; i++) {
+				step = input.substring(i, i+1).toUpperCase();
+
+				// Identifies the current character
+				switch (step) {
+
+					// If command is to go North
+					case 'N':
+						ltd++;
+						stepLtd();
+						break;
+
+					// If command is to go East
+					case 'E':
+						lng++;
+						stepLng();
+						break;
+
+					// If command is to go South
+					case 'S':
+						ltd--;
+						stepLtd();
+						break;
+
+					// If command is to go West
+					case 'O':
+						lng--;
+						stepLng();
+						break;
+				}
+			}
+
+			// Shows the number of pokemons caught
+			document.getElementById('output').value = pkm.toFixed(0)+' pokemon(s) found!';
+
+			// Cleans the variables for another execution
+			ltd = 0;
+			hghLtd = 0;
+			lowLtd = 0;
+			lng = 0;
+			wstLng = 0;
+			estLng = 0;
+			pkm = 1;
+			cdn = [];
+			cdn[0] = [0];
+			cdn[0][0] = 0;
+		}
+	</script>
+</body>
+</html>

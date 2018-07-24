@@ -20,7 +20,7 @@ class Product extends Model
 							  		t.cdlanguage = UPPER(:cdlanguage) 
 						   ORDER BY $order", 
 			array(
-			":cdlanguage"=>$this->cdLanguage
+			":cdlanguage"=>$this->getLanguage()
 		));
 
 	}
@@ -36,7 +36,7 @@ class Product extends Model
 					  WHERE p.idproduct = t.idproduct AND 
 							t.cdlanguage = UPPER(:cdlanguage) ";
 
-		$bindArray[":cdlanguage"] = $this->cdLanguage;
+		$bindArray[":cdlanguage"] = $this->getLanguage();
 
 		// check if is there any arg
 		if (!empty($argsArray)) {
@@ -88,12 +88,12 @@ class Product extends Model
 
 	// pela implementação, as fotos não estão no banco e, portanto, a foto não existe no array de retorno de listAll
 	// é necessário criar uma camada para chamar o getValues e retorno os objetos tratados para as fotos
-	public static function checkList($list)
+	public static function checkList($list, $language)
 	{
 
 		foreach ($list as &$row) {
 			
-			$p = new Product();
+			$p = new Product($language);
 			$p->setData($row);
 			$row = $p->getValues();
 
@@ -109,16 +109,21 @@ class Product extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_products_save (:idproduct, :desproduct, :vlprice, :vlwidth, :vlheight, :vllength, :vlweight, :desurl)", 
+		$results = $sql->select("CALL sp_products_save (:idproduct, :nmproduct, :dsproductred, :dsproductext, :dshistory, :dsurl, :vlprice, :vlwidth, :vlheight, :vllength, :vlweight, :qtsale, :qtstock)", 
 			array(
 			":idproduct"=>$this->getidproduct(),
-			":desproduct"=>$this->getdesproduct(),
+			":nmproduct"=>$this->getnmproduct(),
+			":dsproductred"=>$this->getdsproductred(),
+			":dsproductext"=>$this->getdsproductext(),
+			":dshistory"=>$this->getdshistory(),
+			":dsurl"=>$this->getdsurl(),
 			":vlprice"=>$this->getvlprice(),
 			":vlwidth"=>$this->getvlwidth(),
 			":vlheight"=>$this->getvlheight(),
 			":vllength"=>$this->getvllength(),
 			":vlweight"=>$this->getvlweight(),
-			":desurl"=>$this->getdesurl()
+			":qtsale"=>$this->getqtsale(),
+			":qtstock"=>$this->getqtstock()
 		));
 
 		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
@@ -131,11 +136,20 @@ class Product extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM tb_products WHERE idproduct = :idproduct", array(
-			":idproduct"=>$idproduct
+		$results = $sql->select("
+			SELECT * 
+			  FROM tb_products p, 
+			  	   tb_products_translate
+			 WHERE p.idproduct = :idproduct AND
+			 	   p.idproduct = t.idproduct AND
+			 	   t.cdlanguage = UPPER(:cdlanguage)"
+			 	   , array(
+			":idproduct"=>$idproduct,
+			":cdlanguage"=>$this->getLanguage()
 		));
 
 		$this->setData($results[0]);
+		$this->checkPhoto();
 
 	}
 
@@ -158,20 +172,20 @@ class Product extends Model
 	{
 
 		if (file_exists(
-			$_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR .
-			"site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR .
-			"products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg"
+			$_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "assets" . DIRECTORY_SEPARATOR .
+			"img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . 
+			"product" . $this->getidproduct() . ".jpg"
 		)) {
 
-			$url = "/res/site/img/products/" . $this->getidproduct() . ".jpg";
+			$url = "/assets/img/products/product" . $this->getidproduct() . ".jpg";
 
 		} else {
 
-			$url = "/res/site/img/product.jpg";
+			$url = "/assets/img/products/product.jpg";
 
 		}
 
-		return $this->setdesphoto($url);
+		return $this->setdsphoto($url);
 
 	}
 
@@ -214,9 +228,9 @@ class Product extends Model
 				break;
 		}
 
-		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR .
-				"site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR .
-				"products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg";
+		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "assets" . DIRECTORY_SEPARATOR .
+				"img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . 
+				$this->getidproduct() . ".jpg";
 		
 		imagejpeg($image, $dist);
 
@@ -227,18 +241,25 @@ class Product extends Model
 
 	}
 
-//	public function getFromURL($desurl)
-	public function getFromURL($desurl,$language)
+	public function getFromURL($dsurl, $limit = 1)
 	{
 
 		$sql = new Sql();
 
-		$rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", [
-			':desurl'=>$desurl
-//			':desurl'=>$language.'/'.$desurl
+		$rows = $sql->select("
+			SELECT * 
+			  FROM tb_products p,
+			  	   tb_products_translate t
+			 WHERE p.idproduct = t.idproduct AND
+			 	   t.dsurl = :dsurl AND
+			 	   t.cdlanguage = UPPER(:cdlanguage)
+			 LIMIT ".$limit, [
+				':dsurl'=>$dsurl,
+				':cdlanguage'=>$this->getLanguage()
 		]);
 
 		$this->setData($rows[0]);
+		$this->checkPhoto();
 
 	}
 
@@ -247,8 +268,16 @@ class Product extends Model
 
 		$sql = new Sql();
 
-		return $sql->select("SELECT * FROM tb_categories c INNER JOIN tb_productscategories p ON c.idcategory = p.idcategory WHERE p.idproduct = :idproduct", [
-			':idproduct'=>$this->getidproduct()
+		return $sql->select("
+			SELECT * 
+			  FROM tb_categories c INNER JOIN tb_productscategories p ON c.idcategory = p.idcategory,
+			  	   tb_categories_translate t
+			 WHERE p.idproduct = :idproduct AND
+			 	   p.idcategory = t.idcategory AND
+			 	   t.cdlanguage = UPPER(:cdlanguage)
+		  ORDER BY t.nmcategory", [
+			':idproduct'=>$this->getidproduct(),
+			':cdlanguage'=>$this->getLanguage()
 		]);
 
 	}

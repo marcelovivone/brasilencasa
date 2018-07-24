@@ -1,0 +1,50 @@
+<section id="profile-orders" class="wow fadeInUp">
+	<div class="container">
+		<div class="row">
+			<div class="section-header col-12">
+				<h2>Your Account</h2>
+			</div>
+
+			<div class="col-md-3 menu">
+				{include="profile-menu"}
+			</div>
+             
+			<div class="col-md-9 field">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col" class="number">Valor Total</th>
+							<th scope="col">Status</th>
+							<th scope="col">Endereço</th>
+							<th scope="col">&nbsp;</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{loop="$orders"}
+						<tr>
+							<th scope="row">{$value.idorder}</th>
+							<td class="number">{function="formatEU($value.vltotal)"} €</td>
+							<td>{$value.dsstatus}</td>
+							<td><span>{function="utf8encode($value.dsaddress)"}, {$value.dsnumber}, {$value.dszipcode}</span><br/><span class="country">{$value.dsdistrict} {$value.dscountry}</span></td>
+							<td style="width:222px;">
+								<a class="btn btn-common col-7" href="/en/order/{$value.idorder}" role="button">Ticket</a>
+								<a class="btn btn-default" href="/en/profile/orders/{$value.idorder}" role="button">Details</a>
+							</td>
+						</tr>
+						{else}
+						<tr>
+						<td colspan="5">
+						<div id="success-message">
+							No orders found.
+						</div>
+						</td>
+					</tr>
+						{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>

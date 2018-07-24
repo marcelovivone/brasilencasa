@@ -21,13 +21,13 @@
 
 						<div class="col-12">
 							<small id="passwordHelpBlock" class="form-text text-muted">
-								Your password must be 8-20 characters long, contain at least one lowercase and one uppercase alphabetical character and one numeric character, and must not contain spaces, special characters, or emoji.
+								Your password must be 8-20 characters long, contain at least one lowercase and one uppercase character and one number, and must not contain spaces or special characters.
 							</small>
 						</div>
 					</div>
 
 					<div class="col-12 d-flex justify-content-center">
-						<button type="button" class="btn btn-common col-6" onclick="validateForm(this.form, true, '', 'password', 'en', false)">Save Password</button>
+						<button type="button" class="btn btn-common col-2" onclick="validateForm(this.form, true, '', 'password', 'en', false)">Save Password</button>
 					</div>
 				</form>
 			</div>

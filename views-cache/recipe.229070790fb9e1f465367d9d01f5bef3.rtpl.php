@@ -2,7 +2,13 @@
 	<div class="container">
 		<div class="section-header">
 			<h2>Recipes</h2>
+			<?php $counter1=-1;  if( isset($recipes) && ( is_array($recipes) || $recipes instanceof Traversable ) && sizeof($recipes) ) foreach( $recipes as $key1 => $value1 ){ $counter1++; ?>
+			<h5><?php echo htmlspecialchars( $value1["nmrecipe"], ENT_COMPAT, 'UTF-8', FALSE ); ?></h5>
+			<p>Ingredients: <?php echo htmlspecialchars( $value1["dsingredient"], ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
+			<p>Recipe: <?php echo htmlspecialchars( $value1["dsrecipe"], ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
+			<?php }else{ ?>
 			<p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+			<?php } ?>
 		</div>
 			
 		<div class="row">

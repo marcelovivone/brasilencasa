@@ -81,8 +81,7 @@ class Mailer
 		//$this->mail->addReplyTo('replyto@example.com', 'First Last');
 
 		//Set who the message is to be sent to
-//		$this->mail->addAddress($toAddress, $toName);
-		$this->mail->addAddress("marcelovivone@gmail.com", $toName);
+		$this->mail->addAddress($toAddress, $toName);
 
 		//Set the subject line
 		$this->mail->Subject = $subject;
@@ -102,7 +101,7 @@ class Mailer
 	public function send() {
 
 		return $this->mail->send();
-
+	
 	}
 
 }

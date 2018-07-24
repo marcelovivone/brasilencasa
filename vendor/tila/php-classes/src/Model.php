@@ -6,10 +6,10 @@ class Model {
 
 	// array contém todos valore dos campos do objeto (atributos das tabelas)
 	private $values = [];
-	public $cdLanguage = "";
+	private $language = "";
 
-	public function __construct($cdLanguage) {
-        $this->cdLanguage = $cdLanguage;
+	public function __construct($language) {
+        $this->language = $language;
     }
 	
 	// executado toda vez que o método for chamado
@@ -56,10 +56,17 @@ class Model {
 		return $this->values;
 	}
 
-	public function setLanguage($cdLanguage)
+	public function getLanguage()
 	{
 
-		$this->cdLanguage = $cdLanguage;
+		return $this->language;
+
+	}
+
+	public function setLanguage($language)
+	{
+
+		$this->language = $language;
 
 	}
 

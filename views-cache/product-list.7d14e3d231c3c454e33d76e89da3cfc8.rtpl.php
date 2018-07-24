@@ -1,4 +1,18 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?></div>
+
+<script>
+function submitForm(element, idproduct) {
+	let form = '';
+
+	form = document.getElementById(`product-social${idproduct}`);
+
+	form.method = 'post';
+	form.action = '/en/profile/wishlist/include';
+
+	$(form).submit();
+}
+</script>
+
 <!-- first section (produto)-->
 <section id="service-block-main" class="wow fadeInUp section">
 	<!-- Container Starts -->
@@ -159,38 +173,38 @@
 			<div class="row">
 				<?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 				<div class="col-sm-6 col-md-3">
-					<!-- Product Item Starts -->
 					<div class="product-item wow fadeInUpQuick" data-wow-delay="1s">
 						<figure class="product-profile">
-							<a>
-								<img width="256" alt="Acai" src="/assets/img/products/product<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>.jpg">
-							</a>
+							<a><img alt="$value.idproduct" src="/assets/img/products/product<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>.jpg"></a>
 							<figcaption class="our-product">
-								<div class="d-flex-inline justify-content-center details content-white">
-       								<a href="/product/detail" class="btn-details scrollto">Details</a>
-        							<div class="d-flex justify-content-center social">
-        								<a class="nav-link" href="/#"><i class="fa fa-heart wishlist"></i></a>
-        								<a class="nav-link" href="/cart"><i class="fa fa-shopping-cart cart"></i></a>
-        							</div>
-								</div>
+								<form id="product-social<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post">
+	 								<div class="d-flex justify-content-center social">
+										<input name="idproduct" value="<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" style="display: none">
+										<input name="nrquantity" value="1" style="display: none">
+	 									<a class="nav-link" href="/en/checkout/cart"><i class="fa fa-shopping-cart cart"></i></a>
+										<a class="nav-link" href="javascript:void(0);" id="wishlist" onclick="submitForm(this, <?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>);"><i class="fa fa-heart wishlist"></i></a>
+	 									<a class="nav-link" href="/en/products/<?php echo htmlspecialchars( $value1["dsurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><i class="fa fa-info info"></i></a>
+ 									</div>
+								</form>
 							</figcaption>
 						</figure>
-						<div class="info">
+
+						<div class="info-name">
 							<h3 class="mb-0 pb-0">
 								<?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>
 							</h3>
-							<p>
+							<p class="pb-1">
 								<?php echo formatEU($value1["vlprice"]); ?> € 
 							</p>
 						</div>
+
 						<div class="info-detail">
-							<div class="orange-line"></div>
-							<p>
+							<div class="orange-line	"></div>
+							<p class="pb-1">
 								<?php echo htmlspecialchars( $value1["dsproductred"], ENT_COMPAT, 'UTF-8', FALSE ); ?>
 							</p>
 						</div>
 					</div>
-					<!-- Product Item Ends -->
 				</div>
 				<?php } ?>
 			</div>

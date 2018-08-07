@@ -65,23 +65,23 @@
 						<ul class="navbar-nav ml-auto">
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile/wishlist'><i class="fa fa-heart"></i> <span class="roof-description"> Wishlist</span></a>
-							</li>                                     
+							</li>
 							<li class="nav-item">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/cart'><i class="fa fa-shopping-cart"></i> <span class="roof-description"> Cart</span></a>
-							</li>                                     
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/checkout'><i class="fa fa-truck"></i> <span class="roof-description"> Checkout</span></a>
+							</li>
 							<?php if( checkLogin(false) ){ ?>
 							<li class="nav-item">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-lock"></i> <span class="roof-description"><?php echo getUserName('en'); ?></span></a>
-							</li>                                     
+							</li>
 							<li class="nav-item">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/logout'><i class="fa fa-close"></i> <span class="roof-description"> Logout</span></a>
-							</li>                                     
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/logout'><i class="fas fa-sign-out-alt"></i> <span class="roof-description"> Logout</span></a>
+							</li>
 							<?php }else{ ?>
 							<li class="nav-item ml-xs-0">
 								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/profile'><i class="fa fa-user"></i> <span class="roof-description"> Account</span></a>
-							</li>                                     
+							</li>
 							<li class="nav-item">
-								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/login'><i class="fa fa-lock"></i> <span class="roof-description">Login</span></a>
+								<a class="nav-link" href='<?php echo substring($route,0,3); ?>/login'><i class="fas fa-sign-in-alt"></i> <span class="roof-description">Login</span></a>
 							</li>
 							<?php } ?>
 						</ul>
@@ -196,6 +196,89 @@
 									<input class="top_search_submit" type="submit">
 								</div>
 							</div>
+							<?php if( checkLogin(false) ){ ?>
+							<div class="shopping-item ml-4">
+								<ul class="navbar-nav nav-inline" id="navbar-nav">
+									<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-shopping-cart"></i> <span class="product-count"><?php echo getCartNrQty('en'); ?></span></a>
+
+										<div class="dropdown-menu">
+											<div class="row no-gutters">
+												<?php $counter1=-1;  if( isset($cartProducts) && ( is_array($cartProducts) || $cartProducts instanceof Traversable ) && sizeof($cartProducts) ) foreach( $cartProducts as $key1 => $value1 ){ $counter1++; ?>
+												<div class="col-4">
+													<a class="dropdown-item" href="/en/products/<?php echo htmlspecialchars( $value1["dsurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" <?php if( $counter1 == 0 ){ ?>style="border-top: none"<?php } ?>><img alt="<?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" src="/assets/img/products/product<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>.jpg"></a>
+												</div>
+
+												<div class="col-6">
+													<a class="dropdown-item" href="/en/products/<?php echo htmlspecialchars( $value1["dsurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" <?php if( $counter1 == 0 ){ ?>style="border-top: none"<?php } ?>><?php echo htmlspecialchars( $value1["nrquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?> x <?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a>
+												</div>
+
+												<div class="col-2">
+													<div class="row no-gutters">
+														<div class="col-12">
+							        						<a class="nav-link" href="javascript:void(0);" name="delete-link" onclick="submitForm(this, <?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>);" <?php if( $counter1 == 0 ){ ?>style="border-top: none"<?php } ?>><i class="fa fa-trash trash"></i></a>
+														</div>
+
+														<div class="col-12">
+															<a class="dropdown-item d-flex justify-content-end pt-0 pr-3" href="/en/products/<?php echo htmlspecialchars( $value1["dsurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" style="border-top: none"><?php echo formatEU($value1["nrquantity"]*$value1["vlprice"]); ?> €</a>
+														</div>
+													</div>
+												</div>
+												<?php } ?>
+
+												<div class="col-12 d-flex">
+													<div class="row pt-2" style="border-top: 1px solid #e2e6e7;">
+														<div class="col-6 d-flex justify-content-start">
+															<span>Subtotal</span>
+														</div>
+
+														<div class="col-6 d-flex justify-content-end mb-2">
+															<span><?php echo formatEU($cart["vlsubtotal"]); ?> €</span>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12 d-flex">
+													<div class="row pt-2" style="border-top: 1px solid #e2e6e7;">
+														<div class="col-9 d-flex justify-content-start">
+															<span>Shipping (free if over 50 €)</span>
+														</div>
+
+														<div class="col-3 d-flex justify-content-end mb-2">
+															<span><?php if( $cart["vlsubtotal"] < 50 ){ ?>5,99<?php }else{ ?>0,00<?php } ?> €</span>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12 d-flex">
+													<div class="row pt-2" style="border-top: 1px solid #e2e6e7;">
+														<div class="col-6 d-flex justify-content-start">
+															<span><b>Total</b></span>
+														</div>
+
+														<div class="col-6 d-flex justify-content-end mb-2">
+															<span><b><?php echo formatEU($cart["vltotal"]); ?> €</b></span>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12 d-flex justify-content-end checkout-button">
+													<div class="row no-gutters">
+														<div class="col-6">
+															<button type="button" class="btn btn-common col-12 mt-0 ml-0" onclick="window.location.href='/en/checkout/cart'">Got to Cart</button>
+														</div>
+				
+														<div class="col-6">
+															<button type="button" class="btn btn-common col-12 mt-0 ml-1 mr-0" onclick="window.location.href='/en/checkout'">Checkout</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<?php } ?>
 						</div>
 					</nav>
 					<!-- Navbar - End -->

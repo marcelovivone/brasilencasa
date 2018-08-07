@@ -1,0 +1,147 @@
+<script>
+function submitForm(element, idproduct) {
+	console.log(idproduct);
+	let form = '';
+	form = document.getElementById(`checkout-cart-form${idproduct}`);
+
+	if ($(element).attr('name') === 'delete-link') {
+		let el = '';
+
+		for (var i = form.elements.length - 1; i >= 0; i--) {
+			el = form.elements[i];
+
+			if ($(el).attr('name') === 'nrquantity') {
+				$(el).val(0);
+			}
+		}
+	}
+
+	form.method = 'post';
+	form.action = '/en/checkout/cart/input';
+
+	$(form).submit();
+}
+</script>
+
+<section id="checkout-cart" class="wow fadeInUp">
+	<div class="form">
+		<div class="container">
+			<div class="row">
+				<div class="form-group col-12">
+					<div id="error-message"></div>
+					{if="$error != ''"}
+					<div id="error-message-2">
+						{$error}
+					</div>
+					{/if}                
+				</div>
+
+				<div class="section-header col-6">
+					<h2>Shopping Cart</h2>
+				</div>
+
+				<div class="col-6 d-flex justify-content-end" style="height: 60px;">
+					<button type="button" class="btn btn-common col-6" onclick="window.location.href='/en/products'">Continue Shopping</button>
+					<button type="button" class="btn btn-common col-6 mr-0" onclick="window.location.href='/en/checkout'">Proceed to Checkout</button>
+				</div>
+
+				<div class="col-md-12">
+					<div class="product-content-right">
+						<div class="woocommerce">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col" style="width:20%">Product</th>
+										<th scope="col" style="width:11%">Name</th>
+										<th scope="col" class="number" style="width:23%">Price</th>
+										<th scope="col" class="number" style="width:23%">QTY</th>
+										<th scope="col" class="number" style="width:23%">Subtotal</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									{loop="$products"}
+									<form action="" method="post" class="checkout-cart-form" id="checkout-cart-form{$value.idproduct}">
+									<input type="text" name="idproduct" id="idproduct" value="{$value.idproduct}" hidden/>
+										<tr>
+											<th scope="row">
+												<div class="product-item wow fadeInUpQuick" data-wow-delay="1s">
+													<figure class="m-0 p-0">
+														<a><img alt="{$value.nmproduct}" src="/assets/img/products/product{$value.idproduct}.jpg"></a>
+														<figcaption>
+															<div class="d-flex justify-content-center social">
+																<a class="nav-link" href="/en/products/{$value.dsurl}"><i class="fa fa-info info"></i></a>
+<!--
+					        									<a class="nav-link" href="javascript:void(0);" name="delete-link" onclick="submitForm(this, {$cart.idcart});"><i class="fa fa-trash trash"></i></a>
+-->
+					        									<a class="nav-link" href="javascript:void(0);" name="delete-link" onclick="submitForm(this, {$value.idproduct});"><i class="fa fa-trash trash"></i></a>
+															</div>
+														</figcaption>
+													</figure>
+												</div>
+											</th>
+
+											<td>{$value.nmproduct}</td>
+
+											<td class="number">
+												{function="formatEU($value.vlprice)"} €
+											</td>
+
+											<td class="number">
+												<div class="count-input space-bottom">
+													<button type="submit" class="btn incr-btn col-1" formaction="/en/checkout/cart/minus">&minus;</button>
+<!--
+													<input class="quantity" type="number" name="nrquantity" id="nrquantity" value="{$value.nrquantity}" onblur="submitForm(this, {$cart.idcart});"/>
+-->
+													<input class="quantity" type="number" name="nrquantity" id="nrquantity" value="{$value.nrquantity}" onblur="submitForm(this, {$value.idproduct});"/>
+													<button type="submit" class="btn incr-btn col-1" formaction="/en/checkout/cart/plus">&plus;</button>
+												</div>
+											</td>
+
+											<td class="number">
+												{function="formatEU($value.nrquantity*$value.vlprice)"} €
+											</td>
+										</tr>
+									</form>
+									{/loop}
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td class="number">Subtotal</td>
+										<td class="number">
+											{function="formatEU($cart.vlsubtotal)"} €
+										</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td class="number">Shipping (free if over 50 €)</td>
+										<td class="number">
+											{if="$cart.vlsubtotal < 50"}5,99{else}0,00{/if} €
+										</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td class="number"><b>Total</b></td>
+										<td class="number">
+											<b>{function="formatEU($cart.vltotal)"} €</b>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div class="col-12 d-flex justify-content-end checkout-button">
+								<button type="button" class="btn btn-common col-3" onclick="window.location.href='/en/products'">Continue Shopping</button>
+								<button type="button" class="btn btn-common col-3 mr-0" onclick="window.location.href='/en/checkout'">Proceed to Checkout</button>
+							</div>
+						</div>                        
+					</div>                    
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

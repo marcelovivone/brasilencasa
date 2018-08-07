@@ -4,11 +4,13 @@ use \Tila\Page;
 //use \Tila\PageAdmin;
 use \Tila\Model\Address;
 use \Tila\Model\Cart;
+use \Tila\Model\CartProduct;
 use \Tila\Model\Category;
 use \Tila\Model\Order;
 use \Tila\Model\OrderStatus;
 use \Tila\Model\Product;
 use \Tila\Model\Recipe;
+use \Tila\Model\Review;
 use \Tila\Model\SubCategory;
 use \Tila\Model\User;
 use \Tila\Model\WishList;
@@ -84,18 +86,23 @@ function mainMenu ($language, &$menu = [], &$filter = [], &$pageConfig = []) {
 		}
 	}
 
+	$cart = Cart::getFromSession($language);
+
 	/* Page configuration */
 	$pageConfig[2] = $language;
 	$pageConfig[3] = $menu;
+	$pageConfig[5] = $cart->getValues();
+	$pageConfig[6] = $cart->getProducts();
+
 }
 
-/* Route to root page */
+/* Root page route */
 $app->get("/", function() {
 
-	// set default language
+	// Sets default language
 	$language = "en";
 
-	// configure products page
+	// Configures products page
 	mainMenu($language, $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -103,20 +110,19 @@ $app->get("/", function() {
 	$pageConfig[1] = $language;
 	$pageConfig[4] = $language;
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("index", [
-		'menu'=>$menu
+		"menu"=>$menu
 	]);
 
 });
 
-/* Route to language page */
+/* Language page route */
 $app->get("/{language}", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -124,20 +130,19 @@ $app->get("/{language}", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"];
 	$pageConfig[4] = "/".$args["language"];
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("index", [
-		'menu'=>$menu
+		"menu"=>$menu
 	]);
 
 });
 
-/* Route to about page */
+/* About page route */
 $app->get("/{language}/about", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -145,20 +150,19 @@ $app->get("/{language}/about", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/about";
 	$pageConfig[4] = "/".$args["language"];
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("about", [
-		'menu'=>$menu
+		"menu"=>$menu
 	]);
 
 });
 
-/* Route to contact page */
+/* Contact page route */
 $app->get("/{language}/contact", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -166,20 +170,19 @@ $app->get("/{language}/contact", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/contact";
 	$pageConfig[4] = "/".$args["language"];
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("contact", [
-		'menu'=>$menu
+		"menu"=>$menu
 	]);
 
 });
 
-/* Route to recipe page */
+/* Recipe page route */
 $app->get("/{language}/recipes", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -187,22 +190,22 @@ $app->get("/{language}/recipes", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/recipe";
 	$pageConfig[4] = "/".$args["language"];
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	$recipe = new Recipe($args["language"]);
 
 	// Tpl configuration and drawning
-	$page->setTpl("recipe", [
-		'recipes'=>$recipe
+	$page->setTpl("recipes", [
+		// Passes null recipe
+		"recipes"=>$recipe
 	]);
 
 });
 
-/* Route to recipe page by product */
+/* Recipe by product page route */
 $app->get("/{language}/recipes/{dsurl}", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -210,38 +213,38 @@ $app->get("/{language}/recipes/{dsurl}", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/recipe";
 	$pageConfig[4] = "/".$args["language"];
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	/* Loading products */
 	$product = new Product($args["language"]);
 
+	// Reads product from URL name
 	$product->getFromURL($args["dsurl"],10);
 
 	$recipe = new Recipe($args["language"]);
 
+	// Sets recipe product ID
 	$recipe->setData([
 		"idproduct"=>$product->getidproduct()
 	]);
 
-	;
-
 	$page->setTpl("recipes", [
-		'recipes'=>$recipe->getByProduct()
+		// Loads recipe by product ID
+		"recipes"=>$recipe->getByProduct()
 	]);
 
 });
 
-/* Route to products page */
+/* Products page route */
 $app->get("/{language}/products", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
-	/* setting the default order */
+	/* Sets default order */
 	$order = "AZ";
 
-	// loading products
+	// Loading products
 	$product = new Product($args["language"]);
 
 	/* Page configuration */
@@ -249,29 +252,30 @@ $app->get("/{language}/products", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/product";
 	$pageConfig[4] = "/".$args["language"]."/products";
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("product-list", [
 		"menu"=>$menu,
+		// Sorts registers by user chosen
 		"sort"=>$order,
+		// Loads all products
 		"products"=>$product->listAll()
 	]);
 
 });
 
-/* Route to action for products page */
+/* Products DB action route */
 $app->post("/{language}/products", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Loading products */
 	$product = new Product($args["language"]);
 
 	/* Sort configuration */
-	// used in Product to order data
+	// Used to order data in Product
 	$order = "t.nmproduct ASC";
 
 	if (isset($_POST["sort"])) {
@@ -307,54 +311,102 @@ $app->post("/{language}/products", function($request, $response, $args) {
 		}
 	}
 
-
 	/* Page configuration */
 	$pageConfig[0] = "header-compact";
 	$pageConfig[1] = $args["language"]."/product";
 	$pageConfig[4] = "/".$args["language"]."/products";
 
-	// __construct (header)
 	$page = new Page($pageConfig);
 
 	// Tpl configuration and drawning
 	$page->setTpl("product-list", [
 		"menu"=>$menu,
+		// Sorts registers by user chosen or by its initial ordering
 		"sort"=>isset($_POST["sort"]) ? $_POST["sort"] : "AZ",
+		// Loads products by user chosen
 		"products"=>$product->listByArgs($filter,$order)
 	]);
 
 });
 
-// detail product page route
+/* Details product page route */
 $app->get("/{language}/products/{dsurl}", function($request, $response, $args) {
 
-	// configure products page
+	// Configures products page
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Loading products */
 	$product = new Product($args["language"]);
 
+	// Reads product from URL name
 	$product->getFromURL($args["dsurl"]);
 
 	/* Page configuration */
-	$pageConfig[0] = "header-compact";
+	$pageConfig[0] = "header";
 	$pageConfig[1] = $args["language"]."/product";
 	$pageConfig[4] = "/".$args["language"]."/products";
 
-	// __construct (header)
+	$recipe = new Recipe($args["language"]);
+
+	// Sets product ID
+	$recipe->setData([
+		"idproduct"=>$product->getidproduct()
+	]);
+
 	$page = new Page($pageConfig);
 
+	// Tpl configuration and drawning
 	$page->setTpl("product-detail", [
+		// Loads values of current product
 		'product'=>$product->getValues(),
-		'categories'=>$product->getCategories()
+		// Loads categories of current product
+		'categories'=>$product->getCategories(),
+		// Loads recipes of current product
+		'recipes'=>$recipe->getByProduct()
 	]);
 
 });
 
-// login page route
+/* Product review DB action route */
+$app->post("/{language}/products/review/save", function($request, $response, $args) {
+
+	// Configures products page
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	$review = new Review($args["language"]);
+
+	// Reads session user
+	$user = User::getFromSession($args["language"]);
+
+	// Sets review register values
+	$review->setData([
+		"idreview"=>0,
+		"idproduct"=>$_POST["idproduct"],
+		"iduser"=>$user->getiduser() !== null ? $user->getiduser() : 0,
+		"nmname"=>$_POST["name"],
+		"dsemail"=>$_POST["email"],
+		"vlreview"=>$_POST["rating"],
+		"dsreview"=>$_POST["review"]
+	]);
+
+	// Saves review
+	$review->save();
+
+	/* Loading products */
+	$product = new Product($args["language"]);
+
+	$product->get($_POST["idproduct"]);
+
+	// Heads page to current product
+	header("Location: /".$args["language"]."/products/".$product->getdsurl());
+	exit;
+
+});
+
+/* Login page route */
 $app->get("/{language}/login", function($request, $response, $args) {
 
-	// configure main menu products
+	// Configures main menu products
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -364,24 +416,26 @@ $app->get("/{language}/login", function($request, $response, $args) {
 
 	$page = new Page($pageConfig);
 
+	// Tpl configuration and drawning
 	$page->setTpl("login", [
-		'error'=>User::getError(),
-		'errorRegister'=>User::getErrorRegister(),
-		'registerValues'=>isset($_SESSION['registerValues']) ? $_SESSION['registerValues'] : [
-			'name'=>'',
-			'email'=>'',
-			'phone'=>''
+		"error"=>User::getError(),
+		"errorRegister"=>User::getErrorRegister(),
+		"registerValues"=>isset($_SESSION["registerValues"]) ? $_SESSION["registerValues"] : [
+			"name"=>"",
+			"email"=>"",
+			"phone"=>""
 		]
 	]);
 
 });
 
-// validation login route
+// Login validation route
 $app->post("/{language}/login", function($request, $response, $args) {
 
 	try {
 
-		User::login($_POST['reg-email'], $_POST['reg-password'], $args["language"]);
+		// Try to validate data entered by user
+		User::login($_POST["reg-email"], $_POST["reg-password"], $args["language"]);
 
 	} catch(Exception $e) {
 
@@ -395,12 +449,13 @@ $app->post("/{language}/login", function($request, $response, $args) {
 
 });
 
-//  page route
+/* Logout action route */
 $app->get("/{language}/logout", function($request, $response, $args) {
 
+	// Logout process
 	User::logout();
 
-	// configure main menu products
+	// Configures main menu products
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -415,49 +470,16 @@ $app->get("/{language}/logout", function($request, $response, $args) {
 
 });
 
-// register new user route
+// New user register DB action route
 $app->post("/{language}/register", function($request, $response, $args) {
 
 	// guardar os dados digitados pelo usuário em uma sessão
 	// utilizada para o caso de ter algum erro no cadastro e não limpar os campos da página
 	$_SESSION["registerValues"] = $_POST;
-/*
-	// validação de campos obrigatórios da página
-	if (!isset($_POST['name']) || $_POST['name'] == '') {
 
-		User::setErrorRegister("Preencha o seu nome.");
-		header('Location: /login');
-		exit;
-
-	}
-
-	if (!isset($_POST['email']) || $_POST['email'] == '') {
-
-		User::setErrorRegister("Preencha o seu e-mail.");
-		header('Location: /login');
-		exit;
-
-	}
-
-	if (!isset($_POST['password']) || $_POST['password'] == '') {
-
-		User::setErrorRegister("Preencha a senha.");
-		header('Location: /login');
-		exit;
-
-	}
-
-	// verifica se o usuário já existe
-	if (User::checkLoginExist($_POST['email']) === true) {
-
-		User::setErrorRegister("Esse endereço de e-mail já está sendo utilizado por outro usuário.");
-		header('Location: /login');
-		exit;
-
-	}
-*/
 	$user = new User($args["language"]);
 
+	// Sets user  register values
 	$user->setData([
 		"inadmin"=>0,
 		"dsemail"=>$_POST["new-email"],
@@ -468,11 +490,12 @@ $app->post("/{language}/register", function($request, $response, $args) {
 		"nrphone"=>$_POST["new-phone"]
 	]);
 
-	// autentica o usuário
-	// caso isso não seja feito, a rota de checkout irá redirecionar para a rota de login
-	// (o usuário precisa estar logado para acessar a rota de checkout)
+	// Saves user
 	$user->insert();
 
+	// User autentication
+	// If this is not done, the checkout route will redirect to the login route
+	// (the user must be logged in to access the checkout route)
 	User::login($_POST["new-email"], $_POST["newpassword"], $args["language"]);
 
 //	header("Location: /".$args["language"]."/checkout");
@@ -481,14 +504,16 @@ $app->post("/{language}/register", function($request, $response, $args) {
 
 });
 
-// rota para página de edição dos dados do usuário
+// User data edit page route
 $app->get("/{language}/profile", function($request, $response, $args) {
 
+	// User must be logged in
 	User::verifyLogin(false, $args["language"]);
 
+	// Reads session user
 	$user = User::getFromSession($args["language"]);
 
-	// configure main menu products
+	// Configures main menu products
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
 
 	/* Page configuration */
@@ -496,13 +521,13 @@ $app->get("/{language}/profile", function($request, $response, $args) {
 	$pageConfig[1] = $args["language"]."/profile";
 	$pageConfig[4] = "/".$args["language"];
 
-	// construct
 	$page = new Page($pageConfig);
 
+	// Tpl configuration and drawning
 	$page->setTpl("profile", [
-		'user'=>$user->getValues(),
-		'profileMsg'=>User::getSuccess(),
-		'profileError'=>User::getError()
+		"user"=>$user->getValues(),
+		"profileMsg"=>User::getSuccess(),
+		"profileError"=>User::getError()
 	]);
 
 });
@@ -511,24 +536,7 @@ $app->get("/{language}/profile", function($request, $response, $args) {
 $app->post("/{language}/profile", function($request, $response, $args) {
 
 	User::verifyLogin(false, $args["language"]);
-/*
-	// validação de campos obrigatórios da página
-	if (!isset($_POST['desperson']) || $_POST['desperson'] === '') {
 
-		User::setError("Preencha o seu nome.");
-		header('Location: /profile');
-		exit;
-
-	}
-
-	if (!isset($_POST['desemail']) || $_POST['desemail'] === '') {
-
-		User::setErrorRegister("Preencha o seu e-mail.");
-		header('Location: /profile');
-		exit;
-
-	}
-*/
 	$user = User::getFromSession($args["language"]);
 
 	// verifica se o usuário já existe
@@ -597,60 +605,6 @@ $app->post("/{language}/profile", function($request, $response, $args) {
 
 	header("location: /".$args["language"]."/profile");
 	exit;
-
-});
-
-// checkout page route
-$app->get("/{language}/checkout", function($request, $response, $args) {
-
-	User::verifyLogin(false);
-
-	$address = new Address();
-
-	$cart = Cart::getFromSession();
-
-	// se o CEP já existir no carrinho: carrega em $_GET o CEP do carrinho
-	if (isset($_GET['zipcode'])) {
-
-		$_GET['zipcode'] = $cart->getdeszipcode();
-
-	}
-
-	// verifica se o cep foi informado
-	if (isset($_GET['zipcode'])){
-
-		// lê os dados de endereço do cep
-		$address->loadFromCEP($_GET['zipcode']);
-		
-		// atribui o novo cep ao carrinho
-		$cart->setdeszipcode($_GET['zipcode']);
-
-		// salva os novos dados no banco de dados
-		$cart->save();
-
-		// refaz o cálculo dos valores de frete
-		$cart->getCalculateTotal();
-
-	}
-
-	// define os dados no carrinho, mesmo que com conteúdos vazios
-	if (!$address->getdsaddress()) $address->setdesaddress('');
-	if (!$address->getdsnumber()) $address->setdesnumber('');
-	if (!$address->getdscomplement()) $address->setdescomplement('');
-	if (!$address->getdsdistrict()) $address->setdesdistrict('');
-	if (!$address->getdscity()) $address->setdescity('');
-	if (!$address->getdsstate()) $address->setdesstate('');
-	if (!$address->getdscountry()) $address->setdescountry('');
-	if (!$address->getdszipcode()) $address->setdeszipcode('');
-
-	$page = new Page();
-
-	$page->setTpl("checkout", [
-		'cart'=>$cart->getValues(),
-		'address'=>$address->getValues(),
-		'products'=>$cart->getProducts(),
-		'error'=>$address::getMsgError()
-	]);
 
 });
 
@@ -1005,7 +959,7 @@ $app->get("/{language}/profile/orders/{idorder}", function($request, $response, 
 
 	$cart->get((int)$order->getidcart());
 
-	$cart->getCalculateTotal();
+	$cart->getTotals();
 
 	// configure main menu products
 	mainMenu($args["language"], $menu, $filter, $pageConfig);
@@ -1077,10 +1031,10 @@ $app->get("/{language}/profile/wishlist", function($request, $response, $args) {
 
 $app->post("/{language}/profile/wishlist/{operation}", function($request, $response, $args) {
 
-/* operation:
-   input, minus and plus from (profile-wishlist)
-   include from (product-list)
-*/
+	/* operation:
+	   input, minus and plus from (profile-wishlist)
+	   include from (product-list)
+	*/
 	if ($_POST["nrquantity"] === "") {
 		header("Location: /".$args["language"]."/profile/wishlist");
 		exit;
@@ -1098,12 +1052,10 @@ $app->post("/{language}/profile/wishlist/{operation}", function($request, $respo
 
 		$user = User::getFromSession($args["language"]);
 
-//		$wishList->getByFK($user->getiduser(), (int)$_POST["idproduct"]);
-
-	$wishList->setData([
-		"iduser"=>$user->getiduser(),
-		"idproduct"=>$_POST["idproduct"]
-	]);
+		$wishList->setData([
+			"iduser"=>$user->getiduser(),
+			"idproduct"=>$_POST["idproduct"]
+		]);
 
 	}
 
@@ -1114,10 +1066,118 @@ $app->post("/{language}/profile/wishlist/{operation}", function($request, $respo
 
 	$wishList->save();
 
-	header("Location: /".$args["language"]."/profile/wishlist");
+	header("Location: ".$_SERVER['HTTP_REFERER']);
 	exit;
 
 });
+
+// Cart page route
+$app->get("/{language}/checkout/cart", function($request, $response, $args) {
+
+	// Configures main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/checkout";
+	$pageConfig[4] = "/".$args["language"];
+
+	$page = new Page($pageConfig);
+
+	// Gets cart from session
+	$cart = Cart::getFromSession($args["language"]);
+
+	// Tpl configuration and drawning
+	$page->setTpl("cart", [
+		// Loads values of current cart
+		"cart"=>$cart->getValues(),
+		// Loads cart products
+		"products"=>$cart->getProducts(),
+		"error"=>Cart::getMsgError()
+	]);
+
+});
+
+$app->post("/{language}/checkout/cart/{operation}", function($request, $response, $args) {
+
+	/* operation:
+	   input, minus and plus from (profile-wishlist)
+	   include from (product-list)
+	*/
+
+	if ($_POST["nrquantity"] === "") {
+		header("Location: /".$args["language"]."/checkout/cart");
+		exit;
+	}
+
+	User::verifyLogin(false, $args["language"]);
+
+	$cart = Cart::getFromSession($args["language"]);
+
+	$cart->setData([
+		"nrquantity"=>($args["operation"] === "minus" ? $_POST["nrquantity"] - 1 : 
+						($args["operation"] === "plus" ? $_POST["nrquantity"] + 1 : $_POST["nrquantity"]))
+	]);
+
+	$product = new Product($args["language"]);
+
+	$product->setData([
+		"idproduct"=>$_POST["idproduct"]
+	]);
+
+	$cart->addProduct($product);
+
+	header("Location: ".$_SERVER['HTTP_REFERER']);
+	exit;
+
+});
+
+// Checkout page route
+$app->get("/{language}/checkout", function($request, $response, $args) {
+
+	User::verifyLogin(false, $args["language"]);
+
+	$user = User::getFromSession($args["language"]);
+
+	$address = new Address($args["language"]);
+
+	$address->setData([
+		"idperson"=>$user->getidperson(),
+		"tpaddress"=>"S"
+	]);
+	$address->getDefault();
+
+	$cart = Cart::getFromSession($args["language"]);
+
+	// define os dados no carrinho, mesmo que com conteúdos vazios
+	if (!$address->getdsaddress()) $address->setdsaddress('');
+	if (!$address->getdsnumber()) $address->setdsnumber('');
+	if (!$address->getdscity()) $address->setdscity('');
+	if (!$address->getdscountry()) $address->setdscountry('');
+	if (!$address->getcdzipcode()) $address->setcdzipcode('');
+	if (!$address->getfldefault()) $address->setfldefault('');
+	if (!$address->gettpaddress()) $address->settpaddress('');
+
+	// Configures main menu products
+	mainMenu($args["language"], $menu, $filter, $pageConfig);
+
+	/* Page configuration */
+	$pageConfig[0] = "header";
+	$pageConfig[1] = $args["language"]."/checkout";
+	$pageConfig[4] = "/".$args["language"];
+
+	$page = new Page($pageConfig);
+
+	$page->setTpl("checkout", [
+		"user"=>$user->getValues(),
+		"cart"=>$cart->getValues(),
+		"address"=>$address->getValues(),
+		"products"=>$cart->getProducts(),
+		"error"=>$address::getError()
+	]);
+
+});
+
 
 /*
 // Zipcode reading route

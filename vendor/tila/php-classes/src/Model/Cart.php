@@ -14,10 +14,10 @@ class Cart extends Model
 	// sessão para mensagem de erro (utilizada no cálculo do frete)
 	const SESSION_ERROR = 'CartError';
 
-	public static function getFromSession()
+	public static function getFromSession($language)
 	{
 
-		$cart = new Cart();
+		$cart = new Cart($language);
 
 		// verifica se a sessão está definida e se o carrinho que está sendo criado já está na sessão 
 //		if (isset($_SESSION[Cart::SESSION]) && (int)$_SESSION[Cart::SESSION]['idcart'] > 0) {
@@ -44,7 +44,7 @@ class Cart extends Model
 				if (User::checkLogin(false)) {
 
 					//lê o usuário da sessão
-					$user = User::getFromSession();
+					$user = User::getFromSession($language);
 
 					$data['iduser'] = $user->getiduser();
 
@@ -110,11 +110,11 @@ class Cart extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select("CALL sp_carts_save(:idcart, :dssessionid, :iduser, :dszipcode, :vlfreight, :nrdays)", [
+		$results = $sql->select("CALL sp_carts_save(:idcart, :dssessionid, :iduser, :cdzipcode, :vlfreight, :nrdays)", [
 			':idcart'=>$this->getidcart(), 
 			':dssessionid'=>$this->getdssessionid(), 
 			':iduser'=>$this->getiduser(), 
-			':dszipcode'=>$this->getdszipcode(), 
+			':cdzipcode'=>$this->getcdzipcode(), 
 			':vlfreight'=>$this->getvlfreight(), 
 			':nrdays'=>$this->getnrdays()
 		]);
@@ -123,37 +123,28 @@ class Cart extends Model
 
 	}
 
-	public function insert()
-	{
-
-		$sql = new Sql();
-
-		$results = $sql->select("CALL sp_categories_save (:idcategory, :dscategory)", 
-			array(
-			":idcategory"=>$this->getidcategory(),
-			":dscategory"=>$this->getdscategory()
-		));
-
-		// atribui o resultado no próprio objeto, para o caso de quem chamou necessite do resultado
-		$this->setData($results[0]);
-
-		// refaz o menu de categoria para contemplar a inclusão
-		Category::updateFile();
-
-	}
-
 	public function addProduct(Product $product)
 	{
 
+		$cartProduct = $this->getCartProduct($product);
+
+		if (count($cartProduct) === 0) {
+			$idCartProduct = 0;
+		} else {
+			$idCartProduct = $cartProduct[0]["idcartproduct"];
+		}
+
 		$sql = new Sql();
 
-		$sql->query("INSERT INTO tb_cartsproducts (idcart, idproduct) VALUES (:idcart, :idproduct)", [
-			':idcart'=>$this->getidcart(),
-			':idproduct'=>$product->getidproduct()
+		$results = $sql->select("CALL sp_cartsproducts_save(:idcartproduct, :idcart, :idproduct, :nrquantity)", [
+			":idcartproduct"=>$idCartProduct,
+			":idcart"=>$this->getidcart(), 
+			":idproduct"=>$product->getidproduct(), 
+			":nrquantity"=>$this->getnrquantity()
 		]);
 
 		// atualiza os valores da página de frete
-		$this->getCalculateTotal();
+		$this->getTotals();
 
 	}
 
@@ -184,8 +175,42 @@ class Cart extends Model
 		]);
 
 		// atualiza os valores da página de frete
-		$this->getCalculateTotal();
+		$this->getTotals();
 
+	}
+
+	public function getCartProduct($product){
+
+		$sql = new Sql();
+
+		$rows = $sql->select("
+			SELECT c.idcartproduct,
+				   p.idproduct,
+		  		   pt.nmproduct,
+		  		   p.vlprice,
+		  		   p.vlwidth, 
+		  		   p.vlheight, 
+		  		   p.vllength,
+		  		   p.vlweight,
+		  		   pt.dsurl,
+		  		   c.nrquantity,
+		  		   p.vlprice
+			  FROM tb_cartsproducts c
+			 INNER JOIN tb_products p ON c.idproduct = p.idproduct
+             INNER JOIN tb_products_translate pt ON p.idproduct = pt.idproduct AND
+													pt.cdlanguage = :cdlanguage
+			 WHERE c.idcart = :idcart AND
+			 	   c.idproduct = :idproduct AND
+			 	   c.dtremoved IS NULL
+		  ORDER BY pt.nmproduct
+		  ", [
+		  	":idcart"=>$this->getidcart(),
+		  	":idproduct"=>$product->getidproduct(),
+		  	":cdlanguage"=>$this->getLanguage()
+		  ]);
+
+		// inclui as fotos do produto às linhas do array
+		return Product::checkList($rows, $this->getLanguage());
 	}
 
 	public function getProducts(){
@@ -212,7 +237,7 @@ class Cart extends Model
 		  		   p.vllength,
 		  		   p.vlweight,
 		  		   pt.dsurl,
-		  		   c.nrquantidade,
+		  		   c.nrquantity,
 		  		   p.vlprice
 			  FROM tb_cartsproducts c
 			 INNER JOIN tb_products p ON c.idproduct = p.idproduct
@@ -243,12 +268,12 @@ class Cart extends Model
 //				   SUM(vlweight) AS vlweight,
 //				   COUNT(*) AS nrqtd
 		$results = $sql->select("
-			SELECT SUM(vlprice*nrquantidade) AS vlpricesubtotal,
-				   SUM(vlwidth*nrquantidade) AS vlwidthsubtotal,
-				   SUM(vlheight*nrquantidade) AS vlheightsubtotal,
-				   SUM(vllength*nrquantidade) AS vllengthsubtotal,
-				   SUM(vlweight*nrquantidade) AS vlweightsubtotal,
-				   SUM(nrquantidade) AS nrquantidadesubtotal
+			SELECT SUM(vlprice*nrquantity) AS vlsubtotalprice,
+				   SUM(vlwidth*nrquantity) AS vlsubtotalwidth,
+				   SUM(vlheight*nrquantity) AS vlsubtotalheight,
+				   SUM(vllength*nrquantity) AS vlsubtotallength,
+				   SUM(vlweight*nrquantity) AS vlsubtotalweight,
+				   SUM(nrquantity) AS nrsubtotalquantity
 			  FROM tb_products p
 			 INNER JOIN tb_cartsproducts c ON p.idproduct = c.idproduct
 			 WHERE c.idcart = :idcart AND
@@ -319,7 +344,7 @@ class Cart extends Model
 
 			$this->setnrdays($result->PrazoEntrega);
 			$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
-			$this->setdszipcode($nrzipcode);
+			$this->setcdzipcode($nrzipcode);
 
 			$this->save();
 
@@ -369,37 +394,37 @@ class Cart extends Model
 	{
 
 		// atualiza o valor do frete na página apenas se o zipcode tiver sido informado
-		if ($this->getdszipcode() != ''){
+		if ($this->getcdzipcode() != ''){
 
-			$this->setFreight($this->getdszipcode());
+			$this->setFreight($this->getcdzipcode());
 
 		}
 
 
 	}
 
-	// sobrescrevendo o método do Model para adicionar 2 valores que devem ser mostrados na
-	// página de cálculo de frete e que não estão originalmente dentro do carrinho (subtotal
-	// e total geral)
+	// getValues method overwritten to add 3 new values (not saved in table DB)
 	public function getValues()
 	{
 
-		$this->getCalculateTotal();
+		$this->getTotals();
 
 		return parent::getValues();
 
 	}
 
-	public function getCalculateTotal()
+	public function getTotals()
 	{
 
 		$this->updateFreight();
 
 		$totals = $this->getProductsTotals();
 
-		$this->setnrquantidadesubtotal($totals['nrquantidadesubtotal']);
-		$this->setvlsubtotal($totals['vlpricesubtotal']);
-		$this->setvltotal($totals['vlpricesubtotal'] + $this->getvlfreight());
+		$this->setnrsubtotalquantity($totals['nrsubtotalquantity']);
+		$this->setvlsubtotal($totals['vlsubtotalprice']);
+//		$this->setvltotal($totals['vlsubtotalprice'] + $this->getvlfreight());
+		$this->setvltotal($totals['vlsubtotalprice'] + 
+			($totals['vlsubtotalprice'] < 50 ? 5.99 : 0));
 
 	}
 

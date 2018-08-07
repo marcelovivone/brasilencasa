@@ -4,7 +4,7 @@ function submitForm(form) {
 	if (validateForm(form, false, '', '', 'en', true)) {
 		form.method = "post";
 		form.action = "/en/profile/addresses/{$type}/save";
-		$(form).submit();;	
+		$(form).submit();
 	} else {
 		event.preventDefault();
 	}
@@ -18,7 +18,6 @@ function remove(form) {
 
 	form.method = "post";
 	form.action = `/en/profile/addresses/{$type}/delete`;
-console.log(form);
 	$(form).submit();;	
 }
 </script>
@@ -181,14 +180,14 @@ console.log(form);
 
 							<div class="form-group">
 								<div class="row">
-									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-start p-1 mt-2 mb-0 ml-4">
+									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-start pl-0 ml-3 pr-0 mt-2 mb-0 p-1 mt-2 mb-0">
 										<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S">
 										<label class="form-check-label" for="fldefault">
 											Default <span class="legend">(if you want to use this address to billing and shipping)</span>
 										</label>
 									</div>
 	
-									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-end pr-0 mt-2 mb-0 ml-1">
+									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-end pl-0 ml-1 pr-0 mt-2 mb-0">
 										<input class="form-check-input" type="checkbox" name="flreplicate" id="flreplicate" value="S">
 										<label class="form-check-label" for="flreplicate">
 											 {if="$type=='billing'"}Shipping{else}Billing{/if} <span class="legend">(if you want to create this address for {if="$type=='billing'"}Shipping{else}Billing{/if} too)</span>

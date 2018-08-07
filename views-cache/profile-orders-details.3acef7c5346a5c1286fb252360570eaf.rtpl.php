@@ -1,4 +1,4 @@
-<style>
+<?php if(!class_exists('Rain\Tpl')){exit;}?><style>
 @media screen {
 	.print-title {
 		display: none;
@@ -36,11 +36,12 @@
 
 			<div class="section-header col-12 print-title">
 				<h2>Brasil en Casa</h2>
-				<h4>Order #{$order.idorder} - Details</h4>
+				<h4>Order #<?php echo htmlspecialchars( $order["idorder"], ENT_COMPAT, 'UTF-8', FALSE ); ?> - Details</h4>
 			</div>
 
 			<div class="col-md-3 menu">
-				{include="profile-menu"}
+				<?php require $this->checkTemplate("profile-menu");?>
+
 			</div>
 
 			<div class="col-md-9 field">
@@ -54,36 +55,38 @@
 							</tr>
 						</thead>
 						<tbody>
-							{loop="$products"}
+							<?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
+
 							<tr>
 								<td>
-									<span>{$value.nmproduct}</span>
+									<span><?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
 								</td>
 								<td class="number">
-									<span>{function="formatEU($value.vlprice)"} €</span>
+									<span><?php echo formatEU($value1["vlprice"]); ?> €</span>
 								</td>
 								<td class="number">
-									<span>{$value.nrquantity}</span>
+									<span><?php echo htmlspecialchars( $value1["nrquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
 								</td>
 								<td class="number">
-									<span>{function="formatEU($value.vlprice * $value.nrquantity)"} €</span>
+									<span><?php echo formatEU($value1["vlprice"] * $value1["nrquantity"]); ?> €</span>
 								</td>
 							</tr>
-							{/loop}
+							<?php } ?>
+
 						</tbody>
 						<tfoot>
 							<tr>
 								<th><span>Total before Shipping & Handling</span></th>
 								<td></td>
-								<td class="number"><span>{$cart.nrsubtotalquantity}</span></td>
-								<td class="number"><span>{function="formatEU($cart.vlsubtotal)"} €</span></td>
+								<td class="number"><span><?php echo htmlspecialchars( $cart["nrsubtotalquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span></td>
+								<td class="number"><span><?php echo formatEU($cart["vlsubtotal"]); ?> €</span></td>
 							</tr>
-							<tr class="shipping">
+							<tr>
 								<th><span>Shipping & Handling</span></th>
 								<td></td>
 								<td></td>
 								<td class="number">
-									<span>{function="formatEU($cart.vlfreight)"} €</span>
+									<span><?php echo formatEU($cart["vlfreight"]); ?> €</span>
 									<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
 								</td>
 							</tr>
@@ -91,7 +94,7 @@
 								<th><span>Total for This Order</span></th>
 								<td></td>
 								<td></td>
-								<td class="number"><strong><span class="amount">{function="formatEU($cart.vltotal)"} €</span></strong></td>
+								<td class="number"><strong><span class="amount"><?php echo formatEU($cart["vltotal"]); ?> €</span></strong></td>
 							</tr>
 						</tfoot>
 					</table>

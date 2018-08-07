@@ -93,6 +93,29 @@ class Address extends Model
 
 	}
 
+	public function getDefault()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT * 
+			  FROM tb_addresses 
+			 WHERE idperson = :idperson AND
+			 	   tpaddress = :tpaddress AND
+			 	   fldefault = 'S'", [
+			":idperson"=>$this->getidperson(),
+			":tpaddress"=>$this->gettpaddress()
+		]);
+
+		if (count($results) > 0) {
+
+			$this->setData($results[0]);
+
+		}
+
+	}
+
 	public function save()
 	{
 

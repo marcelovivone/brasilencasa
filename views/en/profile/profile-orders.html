@@ -27,7 +27,7 @@
 							<th scope="row">{$value.idorder}</th>
 							<td class="number" style="width:98px;">{function="formatEU($value.vltotal)"} €</td>
 							<td>{$value.dsstatus}</td>
-							<td>{function="utf8encode($value.dsaddress)"}, {$value.dsnumber}, {$value.dszipcode}<br/>{$value.dscity} {$value.dscountry}</td>
+							<td>{function="utf8encode($value.dsaddress)"}, {$value.dsnumber}, {$value.cdzipcode}<br/>{$value.dscity} {$value.dscountry}</td>
 							<td style="width:210px;">
 								<a class="btn btn-common col-6" href="/en/order/{$value.idorder}" role="button">Ticket</a>
 								<a class="btn btn-default" href="/en/profile/orders/{$value.idorder}" role="button">Details</a>

@@ -3,11 +3,17 @@
 <script>
 function submitForm(element, idproduct) {
 	let form = '';
+	let el = '';
 
 	form = document.getElementById(`product-social${idproduct}`);
 
 	form.method = 'post';
-	form.action = '/en/profile/wishlist/include';
+
+	if ($(element).attr('id') === 'cart') {
+		form.action = '/en/checkout/cart/include';
+	} else {
+		form.action = '/en/profile/wishlist/include';
+	}
 
 	$(form).submit();
 }
@@ -181,7 +187,10 @@ function submitForm(element, idproduct) {
 	 								<div class="d-flex justify-content-center social">
 										<input name="idproduct" value="{$value.idproduct}" style="display: none">
 										<input name="nrquantity" value="1" style="display: none">
-	 									<a class="nav-link" href="/en/checkout/cart"><i class="fa fa-shopping-cart cart"></i></a>
+<!--
+										<a class="nav-link" href="/en/checkout/cart"><i class="fa fa-shopping-cart cart"></i></a>
+-->								
+										<a class="nav-link" href="javascript:void(0);" id="cart" onclick="submitForm(this, {$value.idproduct});"><i class="fa fa-shopping-cart cart"></i></a>
 										<a class="nav-link" href="javascript:void(0);" id="wishlist" onclick="submitForm(this, {$value.idproduct});"><i class="fa fa-heart wishlist"></i></a>
 	 									<a class="nav-link" href="/en/products/{$value.dsurl}"><i class="fa fa-info info"></i></a>
  									</div>

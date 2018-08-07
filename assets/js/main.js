@@ -235,6 +235,141 @@ $(function(){
 		}
 	});
 
+	// checkout/checkout.html file
+	$('#checkout-form').validate({
+		ignore: '.ignore',
+		rules: {
+			'nmfirst-billing': {
+				required: true,
+				maxlength: 30
+			},
+			'nmlast-billing': {
+				required: true,
+				maxlength: 90
+			},
+			'dsaddress-billing': {
+				required: true,
+				maxlength: 128
+			},
+			'dsnumber-billing': {
+				required: true,
+				maxlength: 6
+			},
+			'cdzipcode-billing': {
+				required: true,
+				maxlength: 5
+			},
+			'dscity-billing': {
+				required: true,
+				maxlength: 32
+			},
+			'nrphone-billing': {
+				required: true,
+				maxlength: 15
+			},
+			'dscountry-billing': {
+				required: true,
+				maxlength: 32
+			},
+			'nmfirst-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 30
+			},
+			'nmlast-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 90
+			},
+			'dsaddress-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 128
+			},
+			'dsnumber-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 6
+			},
+			'cdzipcode-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 5
+			},
+			'dscity-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 32
+			},
+			'nrphone-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 15
+			},
+			'dscountry-shipping': {
+				required: '#difAddress:checked',
+				maxlength: 32
+			},
+			'payment-method': {
+				required: true
+			},
+			'card-number': {
+				required: function(element) {
+					return $("input[name='payment-method']:checked").val() === 'T';
+				},
+				maxlength: 15
+			},
+			'card-date-month': {
+				required: function(element) {
+					return $("input[name='payment-method']:checked").val() === 'T';
+				},
+				minlength: 2,
+				maxlength: 2
+			},
+			'card-date-year': {
+				required: function(element) {
+					return $("input[name='payment-method']:checked").val() === 'T';
+				},
+				minlength: 2,
+				maxlength: 2
+			},
+			'card-cvv': {
+				required: function(element) {
+					return $("input[name='payment-method']:checked").val() === 'T';
+				},
+				minlength: 3,
+				maxlength: 4
+			}
+		},
+		messages: {
+        	'payment-method': {
+            	required: "You must choose one of the payment methods."
+            },
+        	'card-date-month': {
+            	required: "Month and Year are requireds fields."
+            },
+        	'card-date-year': {
+            	required: "Month and Year are requireds fields."
+            }
+		},
+		highlight: function(label) {
+			$(label).closest('.control-group').addClass('error');
+		},
+		errorPlacement: function(error, element) 
+        {
+
+            if (element.is(":radio")) 
+            {
+	        	let form = element[0].form;
+    	    	element[0].form;
+        
+                error.appendTo($(form).find('.validate').css('display', 'block'));
+            }
+            else if ($(element).attr('name') === 'card-date-month' || $(element).attr('name') === 'card-date-year')
+            { // This is the default behavior 
+
+                error.insertAfter(document.getElementById('card-date-month'));
+            }
+            else
+            { // This is the default behavior 
+                error.insertAfter(element);
+            }
+         }
+	});
+
 	if (document.getElementById('profile')) {
 		document.getElementById('profile-menu-billing-addresses-new').hidden = true;
 		document.getElementById('profile-menu-billing-addresses-edit').hidden = true;
@@ -513,10 +648,7 @@ $(".dropdown").hover(
   }
   );
 
-
-
 //Search
-
   var openSearch = $('.open-search'),
     SearchForm = $('.full-search'),
     closeSearch = $('.close-search');

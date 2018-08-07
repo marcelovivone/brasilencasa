@@ -156,7 +156,8 @@
 		<script src="/assets/js/main.js"></script>
 
 		<!-- Form Validator -->
-		<script src="/assets/js/jquery.validate.min.js"></script>
+<!--		<script src="/assets/js/jquery.validate.min.js"></script> -->
+		<script src="/assets/js/jquery.validate-1.17.1-pre.js"></script>
 		<script src="/assets/js/additional-methods.min.js"></script>
 
 		<!-- Contact Form JavaScript File -->

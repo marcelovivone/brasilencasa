@@ -4,7 +4,7 @@
 			{loop="$recipes"}
 			{$recipe="S"}
 			{if="$counter==0"}
-			<h2>Recipes with {$value.nmproduct}</h2>
+			<h2>Recipes using {$value.nmproduct}</h2>
 			{/if}
 			<h5 class='{if="$counter>0"}mt-4{/if}'>{$value.nmrecipe}</h5>
 			<p>Ingredients: {$value.dsingredient}</p>

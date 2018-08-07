@@ -4,7 +4,7 @@
 			<?php $counter1=-1;  if( isset($recipes) && ( is_array($recipes) || $recipes instanceof Traversable ) && sizeof($recipes) ) foreach( $recipes as $key1 => $value1 ){ $counter1++; ?>
 			<?php $recipe="S"; ?>
 			<?php if( $counter1==0 ){ ?>
-			<h2>Recipes with <?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></h2>
+			<h2>Recipes using <?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></h2>
 			<?php } ?>
 			<h5 class='<?php if( $counter1>0 ){ ?>mt-4<?php } ?>'><?php echo htmlspecialchars( $value1["nmrecipe"], ENT_COMPAT, 'UTF-8', FALSE ); ?></h5>
 			<p>Ingredients: <?php echo htmlspecialchars( $value1["dsingredient"], ENT_COMPAT, 'UTF-8', FALSE ); ?></p>

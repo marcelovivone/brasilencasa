@@ -61,7 +61,9 @@ class Page
 			if ($this->options["header"]["args"] === true) {
 				$this->setTpl($opts[0], [
 					'menu'=>$opts[3],
-					'route'=>$opts[4]
+					'route'=>$opts[4],
+					'cart'=>$opts[5],
+					'cartProducts'=>$opts[6]
 				]);
 			} else {
 				$this->tpl->draw("header");

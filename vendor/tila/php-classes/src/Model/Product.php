@@ -139,7 +139,7 @@ class Product extends Model
 		$results = $sql->select("
 			SELECT * 
 			  FROM tb_products p, 
-			  	   tb_products_translate
+			  	   tb_products_translate t
 			 WHERE p.idproduct = :idproduct AND
 			 	   p.idproduct = t.idproduct AND
 			 	   t.cdlanguage = UPPER(:cdlanguage)"

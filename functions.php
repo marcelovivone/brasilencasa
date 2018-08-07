@@ -42,23 +42,23 @@ function getUserName($language)
 
 }
 
-function getCartNrQtd() {
+function getCartNrQty($language) {
 
-	$cart = Cart::getFromSession();
+	$cart = Cart::getFromSession($language);
 
 	$totals = $cart->getProductsTotals();
 
-	return $totals['nrqtd'];
+	return $totals['nrsubtotalquantity'];
 
 }
 
-function getCartVlSubTotal() {
+function getCartVlSubTotal($language) {
 
-	$cart = Cart::getFromSession();
+	$cart = Cart::getFromSession($language);
 
 	$totals = $cart->getProductsTotals();
 
-	return formatBR($totals['vlprice']);
+	return formatEU($totals['vlsubtotalprice']);
 
 }
 

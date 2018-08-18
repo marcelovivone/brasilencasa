@@ -31,7 +31,7 @@
 							<td><?php echo htmlspecialchars( $value1["dsstatus"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 							<td><?php echo utf8encode($value1["dsaddress"]); ?>, <?php echo htmlspecialchars( $value1["dsnumber"], ENT_COMPAT, 'UTF-8', FALSE ); ?>, <?php echo htmlspecialchars( $value1["cdzipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?><br/><?php echo htmlspecialchars( $value1["dscity"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <?php echo htmlspecialchars( $value1["dscountry"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 							<td style="width:210px;">
-								<a class="btn btn-common col-6" href="/en/order/<?php echo htmlspecialchars( $value1["idorder"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" role="button">Ticket</a>
+								<a class="btn btn-common col-6" href="/en/profile/order/<?php echo htmlspecialchars( $value1["idorder"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" role="button">Ticket</a>
 								<a class="btn btn-default" href="/en/profile/orders/<?php echo htmlspecialchars( $value1["idorder"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" role="button">Details</a>
 							</td>
 						</tr>

@@ -22,11 +22,7 @@ function remove(form) {
 }
 </script>
 
-{if="$action=='read'"}
 <section id="profile-{$type}-addresses" class="wow fadeInUp">
-{else}
-<section id="profile-{$type}-addresses-{$action}" class="wow fadeInUp">
-{/if}
 	<div class="form mb-4">
 		<div class="container">
 			<div class="row">
@@ -55,9 +51,9 @@ function remove(form) {
 				<div class="col-md-9 field">
 					{loop="$addresses"}
 					<form action="" method="post" class="profile-addresses-form" id="profile-addresses-form{$value.idaddress}">
-						<div class="row row{$counter+1}">
+						<div class="row row{$counter+1} row-title">
 							{if="$action=='read'"}
-							<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+							<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0 pb-0">
 								<h6>#{$counter+1}</h6>
 								{if="$value.fldefault=='S'"}
 								<span>&nbsp (Default {if="$type=='billing'"}Billing{else}Shipping{/if} Address)</span>
@@ -65,7 +61,6 @@ function remove(form) {
 							</div>
 
 							<div class="col-6 d-flex justify-content-end">
-
 								{if="$counter==0 || $action=='edit'"}
 								<a class="btn btn-default pt-0" href=/en/profile/addresses/{if="$type=='billing'"}shipping{else}billing{/if} role="button"> {if="$type=='billing'"}Shipping{else}Billing{/if} Addresses</a>
 								<a class="btn btn-default pt-0" href="/en/profile/addresses/{$type}/new" role="button">New</a>
@@ -74,7 +69,11 @@ function remove(form) {
 								<a class="btn btn-default pt-0" href="javascript:void(0);" onclick="remove(document.getElementById('profile-addresses-form{$value.idaddress}'));" role="button">Delete</a>
 							</div>
 							{else}
-							<div class="col-12 d-flex justify-content-end mt-0" style="margin-bottom: 12px">
+							<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0 pb-0">
+								<h6>Edit</h6>
+							</div>
+
+							<div class="col-6 d-flex justify-content-end">
 								<a class="btn btn-default pt-0" href="/en/profile/addresses/billing" role="button">Billing Addresses</a>
 								<a class="btn btn-default pt-0" href="/en/profile/addresses/shipping" role="button">Shipping Addresses</a>
 							</div>
@@ -85,39 +84,46 @@ function remove(form) {
 						<input type="hidden" name="idaddress" value="{$value.idaddress}">
 						<input type="hidden" name="tpaddress" value="{$value.tpaddress}">
 
-						<div class="form-group">
-							<div class="row pt-0">
-								<div class="col-12">
-									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address" value='{function="utf8encode($value.dsaddress)"}' {if="$action=='read'"}disabled{/if}>
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-12 labelled-div-input {if="$action=='read'"}disabled{/if}">
+									<input type="text" class="form-control labelled-input" id="dsaddress" name="dsaddress" value='{function="utf8encode($value.dsaddress)"}' {if="$action=='read'"}disabled{/if}>
+									<label for="dsaddress">Address*</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group">
-							<div class="row">
-								<div class="col-6">
-									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number" value="{$value.dsnumber}" {if="$action=='read'"}disabled{/if}>
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-6 labelled-div-input first-column {if="$action=='read'"}disabled{/if}">
+									<input type="text" class="form-control labelled-input" id="dsnumber" name="dsnumber" value="{$value.dsnumber}" {if="$action=='read'"}disabled{/if}>
+									<label for="dsnumber">Number*</label>
 								</div>
-								<div class="col-6">
-									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code" value="{$value.cdzipcode}" {if="$action=='read'"}disabled{/if}>
+
+								<div class="col-6 labelled-div-input second-column {if="$action=='read'"}disabled{/if}">
+									<input type="text" class="form-control labelled-input" id="cdzipcode" name="cdzipcode" value="{$value.cdzipcode}" {if="$action=='read'"}disabled{/if}>
+									<label for="cdzipcode">Postal Code*</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pb-2">
-							<div class="row">
-								<div class="col-6">
-									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City" value="{$value.dscity}" {if="$action=='read'"}disabled{/if}>
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-6 labelled-div-input first-column {if="$action=='read'"}disabled{/if}">
+									<input type="text" class="form-control labelled-input" id="dscity" name="dscity" value="{$value.dscity}" {if="$action=='read'"}disabled{/if}>
+									<label for="dscity">City*</label>
 								</div>
-								<div class="col-6">
+
+								<div class="col-6 labelled-div-input second-column disabled">
 	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
-									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="España" disabled>
+									<input type="text" class="form-control labelled-input" id="dscountry" name="dscountry" value="España" disabled>
+									<label for="dscountry">Country*</label>
 								</div>
 							</div>
 
 							{if="$action=='edit'"}
-							<div class="form-group">
-								<div class="form-check form-check-inline custom-checkbox checkbox-greensea p-1 mt-4 mb-0">
+							<div class="form-group mb-0">
+								<div class="form-check form-check-inline custom-checkbox checkbox-greensea pt-1 mt-2 mb-0 pl-1">
 									<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S" {if="$value.fldefault=='S'"}checked{/if}>
 									<label class="form-check-label" for="fldefault">
 										Default <span class="legend">(if you want to use this address to billing and shipping)</span>
@@ -133,12 +139,12 @@ function remove(form) {
 						</div>
 					</form>
 					{else}
-					<div class="row row1">
-						<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0">
+					<div class="row row1 row-title">
+						<div class="section-header col-6 d-flex justify-content-start mt-0 mb-0 pb-0">
 							<h6>New</h6>
 						</div>
 
-						<div class="col-6 d-flex justify-content-end pt-0 mt-0" style="margin-bottom: 12px">
+						<div class="col-6 d-flex justify-content-end pt-0 mt-0">
 							<a class="btn btn-default pt-0" href="/en/profile/addresses/billing" role="button">Billing Addresses</a>
 							<a class="btn btn-default pt-0" href="/en/profile/addresses/shipping" role="button">Shipping Addresses</a>
 						</div>
@@ -148,37 +154,42 @@ function remove(form) {
 						<input type="hidden" name="idperson" value="{$idperson}">
 						<input type="hidden" name="tpaddress" value={if="$type=='billing'"}B{else}S{/if}>
 
-						<div class="form-group">
-							<div class="row pt-0">
-								<div class="col-12">
-									<input type="text" class="form-control" id="dsaddress" name="dsaddress" placeholder="Address">
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-12 labelled-div-input">
+									<input type="text" class="form-control labelled-input" id="dsaddress" name="dsaddress">
+									<label for="dsaddress">Address*</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group">
-							<div class="row">
-								<div class="col-6">
-									<input type="text" class="form-control" id="dsnumber" name="dsnumber" placeholder="Number">
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-6 labelled-div-input first-column">
+									<input type="text" class="form-control labelled-input" id="dsnumber" name="dsnumber">
+									<label for="dsnumber">Number*</label>
 								</div>
-								<div class="col-6">
-									<input type="text" class="form-control" id="cdzipcode" name="cdzipcode" placeholder="Postal Code">
+								<div class="col-6 labelled-div-input second-column">
+									<input type="text" class="form-control labelled-input" id="cdzipcode" name="cdzipcode">
+									<label for="cdzipcode">Postal Code*</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pb-2">
-							<div class="row">
-								<div class="col-6">
-									<input type="text" class="form-control" id="dscity" name="dscity" placeholder="City">
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-6 labelled-div-input first-column">
+									<input type="text" class="form-control labelled-input" id="dscity" name="dscity">
+									<label for="dscity">City*</label>
 								</div>
-								<div class="col-6">
+								<div class="col-6 labelled-div-input second-column disabled">
 	<!--								<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="{$value.dscountry}"> -->
-									<input type="text" class="form-control" id="dscountry" name="dscountry" placeholder="Country" value="Spain" disabled>
+									<input type="text" class="form-control labelled-input" id="dscountry" name="dscountry" value="Spain" disabled>
+									<label for="dscountry">Country*</label>
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group mb-0">
 								<div class="row">
 									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-start pl-0 ml-3 pr-0 mt-2 mb-0 p-1 mt-2 mb-0">
 										<input class="form-check-input" type="checkbox" name="fldefault" id="fldefault" value="S">
@@ -187,7 +198,7 @@ function remove(form) {
 										</label>
 									</div>
 	
-									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-end pl-0 ml-1 pr-0 mt-2 mb-0">
+									<div class="form-check form-check-inline custom-checkbox checkbox-greensea d-flex justify-content-end pl-1 ml-1 pr-0 mt-2 mb-0">
 										<input class="form-check-input" type="checkbox" name="flreplicate" id="flreplicate" value="S">
 										<label class="form-check-label" for="flreplicate">
 											 {if="$type=='billing'"}Shipping{else}Billing{/if} <span class="legend">(if you want to create this address for {if="$type=='billing'"}Shipping{else}Billing{/if} too)</span>

@@ -11,7 +11,7 @@ $(function(){
 			else if (regexp.global)
 				regexp.lastIndex = 0;
 				return this.optional(element) || regexp.test(value);
-		},'Please, enter a valid email address.'
+		}, 'Please, enter a valid email address.'
 	);
 
 	// add password regex method
@@ -23,9 +23,9 @@ $(function(){
 			else if (regexp.global)
 				regexp.lastIndex = 0;
 				return this.optional(element) || regexp.test(value);
-		},'Please, enter a valid password.'
+		}, 'Please, enter a valid password.'
 	);
-	
+
 	// store/login.html file
 	$('#reg-user-form').validate({
 		ignore: '.ignore',
@@ -39,8 +39,25 @@ $(function(){
 				required: true
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
@@ -82,10 +99,26 @@ $(function(){
                 error.appendTo( element.parents('.validate') );
             }
             else 
-            { // This is the default behavior 
-                error.insertAfter( element );
-            }
-         }
+            {
+				// div parent of input element
+				let v = $(element[0]).parent('div');
+				$(v).css(
+					{ 'color': 'blue', 
+					  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+				// div width
+				let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+				// setup error
+				$(error).css({
+					'width': z+'px',
+					'padding-right': '2px',
+					'text-align': 'right'
+				});
+
+				error.insertAfter(element[0]);
+			}
+		}
 	});
 
 	// store/contact.html file
@@ -112,8 +145,25 @@ $(function(){
 				maxlength: 1000
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
@@ -127,8 +177,25 @@ $(function(){
 				'regex-email': /^\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
@@ -144,8 +211,25 @@ $(function(){
 /* - strong		'regex-password': /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ */
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
@@ -153,20 +237,24 @@ $(function(){
 	$('#profile-form').validate({
 		ignore: '.ignore',
 		rules: {
-			'firstname': {
+			'nmfirst': {
 				required: true,
 				maxlength: 30
 			},
-			'lastname': {
+			'nmlast': {
 				required: true,
 				maxlength: 90
 			},
-			'email': {
+			'dsemail': {
 				required: true,
 				email: true
 			},
-			'title': {
+			'tptitle': {
 				required: true
+			},
+			'nrphone': {
+				digits: true,
+				maxlength: 15
 			}
 		},
 		errorPlacement: function(error, element) 
@@ -176,10 +264,26 @@ $(function(){
                 error.appendTo( element.parents('.validate') );
             }
             else 
-            { // This is the default behavior 
-                error.insertAfter( element );
-            }
-         }
+            {
+				// div parent of input element
+				let v = $(element[0]).parent('div');
+				$(v).css(
+					{ 'color': 'blue', 
+					  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+				// div width
+				let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+				// setup error
+				$(error).css({
+					'width': z+'px',
+					'padding-right': '2px',
+					'text-align': 'right'
+				});
+
+				error.insertAfter(element[0]);
+			}
+		}
 	});
 
 	// store/profile-change-password.html file
@@ -200,8 +304,25 @@ $(function(){
 		      	equalTo: '#newpassword'
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
@@ -230,13 +351,30 @@ $(function(){
 				maxlength: 32
 			}
 		},
-		highlight: function(label) {
-			$(label).closest('.control-group').addClass('error');
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
 		}
 	});
 
 	// checkout/checkout.html file
-	$('#checkout-form').validate({
+	$('#checkout-billing-address-form').validate({
 		ignore: '.ignore',
 		rules: {
 			'nmfirst-billing': {
@@ -257,6 +395,7 @@ $(function(){
 			},
 			'cdzipcode-billing': {
 				required: true,
+				digits: true,
 				maxlength: 5
 			},
 			'dscity-billing': {
@@ -265,44 +404,172 @@ $(function(){
 			},
 			'nrphone-billing': {
 				required: true,
+				digits: true,
 				maxlength: 15
 			},
 			'dscountry-billing': {
 				required: true,
 				maxlength: 32
+			}
+		},
+		messages: {
+			'nmfirst-billing': {
+				required: 'Required',
+				maxlength: '< 30 char'
 			},
+			'nmlast-billing': {
+				required: 'Required',
+				maxlength: '< 90 char'
+			},
+			'dsaddress-billing': {
+				required: 'Field required',
+				maxlength: 'Maximum of 128 char'
+			},
+			'dsnumber-billing': {
+				required: 'Required',
+				maxlength: '<= 6 nr'
+			},
+			'cdzipcode-billing': {
+				required: 'Required',
+				digits: 'Nr only',
+				maxlength: '<= 5 nr'
+			},
+			'dscity-billing': {
+				required: 'Field required',
+				maxlength: 'Maximum of 32 char'
+			},
+			'nrphone-billing': {
+				required: 'Required',
+				digits: 'Nr only',
+				maxlength: '<= 15 nr'
+			},
+			'dscountry-billing': {
+				required: 'Required',
+				maxlength: '< 32 char'
+			}
+		},
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
+		}
+	});
+
+	// checkout/checkout.html file
+	$('#checkout-shipping-address-form').validate({
+		ignore: '.ignore',
+		rules: {
 			'nmfirst-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 30
 			},
 			'nmlast-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 90
 			},
 			'dsaddress-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 128
 			},
 			'dsnumber-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 6
 			},
 			'cdzipcode-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 5
 			},
 			'dscity-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 32
 			},
 			'nrphone-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
+				digits: true,
 				maxlength: 15
 			},
 			'dscountry-shipping': {
-				required: '#difAddress:checked',
+				required: '#difAddresshidden:checked',
 				maxlength: 32
+			}
+		},
+		messages: {
+			'nmfirst-shipping': {
+				required: 'Required',
+				maxlength: '< 30 char'
 			},
+			'nmlast-shipping': {
+				required: 'Required',
+				maxlength: '< 90 char'
+			},
+			'dsaddress-shipping': {
+				required: 'Field required',
+				maxlength: 'Maximum of 128 char'
+			},
+			'dsnumber-shipping': {
+				required: 'Required',
+				maxlength: '<= 6 nr'
+			},
+			'cdzipcode-shipping': {
+				required: 'Required',
+				digits: 'Nr only',
+				maxlength: '<= 5 nr'
+			},
+			'dscity-shipping': {
+				required: 'Field required',
+				maxlength: 'Maximum of 32 char'
+			},
+			'nrphone-shipping': {
+				required: 'Required',
+				digits: 'Nr only',
+				maxlength: '<= 15 nr'
+			},
+			'dscountry-shipping': {
+				required: 'Required',
+				maxlength: '< 32 char'
+			}
+		},
+		errorPlacement: function(error, element) 
+		{
+			// div parent of input element
+			let v = $(element[0]).parent('div');
+			$(v).css(
+				{ 'color': 'blue', 
+				  'border':'1px solid rgb(212, 14, 112, 0.5)' });
+
+			// div width
+			let z = parseFloat($(v).css('x')) + parseFloat($(v).css('width'));
+
+			// setup error
+			$(error).css({
+				'width': z+'px',
+				'padding-right': '2px',
+				'text-align': 'right'
+			});
+
+			error.insertAfter(element[0]);
+		}
+	});
+
+	// checkout/checkout.html file
+	$('#checkout-creditcard-form').validate({
+		ignore: '.ignore',
+		rules: {
 			'payment-method': {
 				required: true
 			},
@@ -310,64 +577,96 @@ $(function(){
 				required: function(element) {
 					return $("input[name='payment-method']:checked").val() === 'T';
 				},
-				maxlength: 15
+				creditcard: true
 			},
-			'card-date-month': {
+			'card-holders-name': {
 				required: function(element) {
 					return $("input[name='payment-method']:checked").val() === 'T';
 				},
+			},
+			'expiry-month': {
+				required: function(element) {
+					return $("input[name='payment-method']:checked").val() === 'T';
+				},
+				digits: true,
 				minlength: 2,
-				maxlength: 2
+				maxlength: 2,
+				min: 1,
+				max: 12
 			},
-			'card-date-year': {
+			'expiry-year': {
 				required: function(element) {
 					return $("input[name='payment-method']:checked").val() === 'T';
 				},
+				digits: true,
 				minlength: 2,
-				maxlength: 2
+				maxlength: 2,
+				min: function(element) {
+					let today = new Date();
+					let year = today.getFullYear();
+					return parseInt(year.toString().substring(2,4));
+				}
 			},
-			'card-cvv': {
+			'cvc': {
 				required: function(element) {
 					return $("input[name='payment-method']:checked").val() === 'T';
 				},
+				digits: true,
 				minlength: 3,
 				maxlength: 4
 			}
 		},
 		messages: {
-        	'payment-method': {
-            	required: "You must choose one of the payment methods."
-            },
-        	'card-date-month': {
-            	required: "Month and Year are requireds fields."
-            },
-        	'card-date-year': {
-            	required: "Month and Year are requireds fields."
-            }
+			'payment-method': {
+				required: "You must choose one of the payment methods."
+			},
+			'expiry-month': {
+				required: "<div>This field</div><div>is required.</div>",
+				max: "It's not a valid month."
+			},
+			'expiry-year': {
+				required: "<div>This field</div><div>is required.</div>",
+				min: "It's not a valid year."
+			}
 		},
 		highlight: function(label) {
 			$(label).closest('.control-group').addClass('error');
 		},
 		errorPlacement: function(error, element) 
-        {
+		{
 
-            if (element.is(":radio")) 
-            {
-	        	let form = element[0].form;
-    	    	element[0].form;
-        
-                error.appendTo($(form).find('.validate').css('display', 'block'));
-            }
-            else if ($(element).attr('name') === 'card-date-month' || $(element).attr('name') === 'card-date-year')
-            { // This is the default behavior 
+			if (element.is(":radio")) 
+			{
+				let form = element[0].form;
+				element[0].form;
 
-                error.insertAfter(document.getElementById('card-date-month'));
-            }
-            else
-            { // This is the default behavior 
-                error.insertAfter(element);
-            }
-         }
+				error.appendTo($(form).find('.validate').css('display', 'block'));
+			}
+			else if ($(element).attr('name') === 'expiry-month' || 
+					 $(element).attr('name') === 'expiry-year')
+			{
+				error.css('padding-top', '0.2em');
+				error.css('line-height', '1.5');
+				error.css('width', '90px');
+
+				if ($(element).attr('name') === 'expiry-year') {
+					error.css('margin-top', '-4.1em');
+					error.css('margin-left', '7.2em');
+				} 
+
+				error.insertAfter(element);
+			}
+			else if ($(element).attr('name') === 'cvc')
+			{
+				error.css('width', '230px');
+				error.insertAfter(element);
+			}
+			else
+			{ 
+				// This is the default behavior 
+				error.insertAfter(element);
+			}
+		}
 	});
 
 	if (document.getElementById('profile')) {
@@ -466,6 +765,24 @@ $(function(){
 		document.getElementById('profile-menu-orders-details').hidden = true;
 		document.getElementById('profile-menu-wishlist').classList.add('active');
 	}
+
+	// changes border color on focus to highlight the element
+	$('.labelled-input').focus( function() {
+		$(this).parents('.labelled-div-input').css('border-color', 'rgba(12, 46, 138, 0.4)');
+	});
+
+	$('.labelled-textarea').focus( function() {
+		$(this).parents('.labelled-div-textarea').css('border-color', 'rgba(12, 46, 138, 0.4)');
+	});
+
+	// changes border color on blur to original color
+	$('.labelled-input').blur( function() {
+		$(this).parents('.labelled-div-input').css('border-color', '#ced4da');
+	});
+
+	$('.labelled-textarea').blur( function() {
+		$(this).parents('.labelled-div-textarea').css('border-color', '#ced4da');
+	});
 });
 
 // store email and password checking

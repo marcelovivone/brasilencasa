@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info alert-custom" role="alert">
-					<h4 class="alert-heading">An email has been sent!</h4>
+					<h4 class="alert-heading">An email was sent!</h4>
 					<p>Check your email account and follow the instructions to recover your password.</p>
 				</div>
 			</div>

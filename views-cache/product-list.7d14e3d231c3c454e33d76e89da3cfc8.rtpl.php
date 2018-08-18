@@ -20,7 +20,7 @@ function submitForm(element, idproduct) {
 </script>
 
 <!-- first section (produto)-->
-<section id="service-block-main" class="wow fadeInUp section">
+<section id="product-header" class="wow fadeInUp section">
 	<!-- Container Starts -->
 	<div class="container">
 		<div class="row">
@@ -111,12 +111,11 @@ function submitForm(element, idproduct) {
 								</div>
 							</li>
 							<?php } ?>
+
 							<li class="nav-item dropdown">
-						    	<div class="dropdown-item checkbox-greensea">
-									<a class="nav-link dropdown-toggle no-after" data-toggle="dropdown" href="/en/products" role="button" aria-haspopup="true" aria-expanded="false">
-										All 
-									</a>
-								</div>
+								<a class="nav-link last" href='<?php echo substring($route,0,3); ?>/products' role="button" aria-haspopup="true" aria-expanded="false">
+									All
+								</a>
 							</li>
 						</ul>
 						<ul class="navbar-nav nav-inline ml-0 ml-auto mt-lg-0">

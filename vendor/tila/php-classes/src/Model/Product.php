@@ -8,6 +8,9 @@ use \Tila\Model;
 class Product extends Model
 {
 
+	protected $sql;
+	protected $stmt;
+
 	public function listAll($order = "t.nmproduct ASC")
 	{
 
@@ -38,31 +41,31 @@ class Product extends Model
 
 		$bindArray[":cdlanguage"] = $this->getLanguage();
 
-		// check if is there any arg
+		// Check if there is any arg
 		if (!empty($argsArray)) {
 			$sqlWhere = "";
 			$lastCol = "";
 			$lastVal = "";
 
-			// array sort by key
+			// Array sort by key
 			ksort($argsArray);
 
-			// iteration to set where and bind strings
+			// Iteration to set where and bind strings
 			foreach ($argsArray as $key => $value) {
 				
 				// pick up the name of the column
 				$col = substr($key, 0, strlen($key)-1);
 				$val = $value;
 
-				// avoid repetition
+				// Avoid repetition
 				if ($col === $lastCol && $val == $lastVal) {
 					continue;
 				}
 
-				/* add parameter to where clause
-				   if the column name is the same, concatenate with OR
-				   if not, if is the first iteration, concatenate with (
-				   if not, concatenate wiht ) AND (
+				/* Add parameter to where clause
+				   If the column name is the same, concatenate with OR
+				   If not, if is the first iteration, concatenate with (
+				   If not, concatenate wiht ) AND (
 				*/
 				$sqlWhere .= ($col === $lastCol ? " OR " : ($lastCol !== "" ? ") AND (" : "AND ("));
 
@@ -86,6 +89,99 @@ class Product extends Model
 
 	}
 
+	public function listBySearch($search, $limit = 10000)
+	{
+
+		$sql = new Sql();
+		
+		$results = $sql->select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			  FROM tb_products p, 
+				   tb_products_translate t 
+			 WHERE p.idproduct = t.idproduct AND 
+				   t.cdlanguage = UPPER(:cdlanguage) AND
+				 ( t.nmproduct LIKE :search OR 
+				   t.dsproductred LIKE :search OR 
+				   t.dsproductext LIKE :search ) 
+		  ORDER BY t.nmproduct ASC
+		  ", 
+			array(
+			":cdlanguage"=>$this->getLanguage(),
+			":search"=>"%".$search."%"
+		));
+
+		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal;");
+
+		return [
+			"data"=>$results,
+			"total"=>(int)$resultTotal[0]["nrtotal"]
+		];
+
+	}
+/*
+	public function prepareFetchSearch(&$sql, &$stmt, $search)
+	{
+
+		$sql = new Sql();
+
+		$cmd = "SELECT * 
+							   FROM tb_products p, 
+							   		tb_products_translate t 
+							  WHERE p.idproduct = t.idproduct AND 
+							  		t.cdlanguage = UPPER(:cdlanguage) AND
+							  	  ( t.nmproduct LIKE :search OR 
+							  	    t.dsproductred LIKE :search OR 
+							  	    t.dsproductext LIKE :search ) 
+						   ORDER BY t.nmproduct ASC";
+
+		$params = array(
+			":cdlanguage"=>$this->getLanguage(),
+			":search"=>"%".$search."%"
+		);
+
+		$stmt = $sql->prepare($cmd, $params);
+
+		$this->sql = $sql;
+		$this->stmt = $stmt;
+//$this->fetchSearch($sql, $stmt);
+
+$html = '<ul>';
+
+//while ($result = $this->fetchSearch($sql, $stmt)) {
+//while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+while ($result = $sql->fetch($stmt)) {
+
+// Creating unordered list items.
+
+// Calling javascript function named as "fill" found in "script.js" file.
+
+// By passing fetched result as parameter. -->
+
+	$html .= "
+	<li onclick='fill(".$result["nmproduct"].")'>
+	<a>
+		".$result["nmproduct"]."
+		</a>
+	</li>
+	";
+
+}
+
+$html .= "</ul>";
+
+
+//		return $stmt;
+
+	}
+
+	public function fetchSearch($sql, $stmt): array
+	{
+
+print_r($sql->fetch($stmt));
+		return $sql->fetch($stmt);
+
+	}
+*/
 	// pela implementação, as fotos não estão no banco e, portanto, a foto não existe no array de retorno de listAll
 	// é necessário criar uma camada para chamar o getValues e retorno os objetos tratados para as fotos
 	public static function checkList($list, $language)
@@ -258,8 +354,14 @@ class Product extends Model
 				':cdlanguage'=>$this->getLanguage()
 		]);
 
-		$this->setData($rows[0]);
-		$this->checkPhoto();
+		if (count($rows) > 0) { 
+			$this->setData($rows[0]);
+			$this->checkPhoto();
+		} else {
+			$this->setData([
+				"idprodutct"=>"0"
+			]);
+		}
 
 	}
 
@@ -292,7 +394,7 @@ class Product extends Model
 		$results = $sql->select("
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_products
-			 ORDER BY desproduct
+			 ORDER BY dsproductred
 			 LIMIT $start, $itemPerPage;
 		");
 
@@ -306,29 +408,48 @@ class Product extends Model
 
 	}
 
-	public static function getPageSearch($search, $page = 1, $itemPerPage = 10)
+	public function getPageSearch($search, $page = 1, $itemPerPage = 10)
 	{
 
 		$start = ($page - 1) * $itemPerPage;
 
 		$sql = new Sql();
-
+/*
 		$results = $sql->select("
 			SELECT SQL_CALC_FOUND_ROWS *
 			  FROM tb_products 
-			 WHERE desproduct LIKE :search
-			 ORDER BY desproduct
+			 WHERE dsproduct LIKE :search
+			 ORDER BY dsproduct
 			 LIMIT $start, $itemPerPage;
 		", [
 			':search'=>'%'.$search.'%'
 		]);
+*/
+
+		$results = $sql->select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			  FROM tb_products p, 
+				   tb_products_translate t 
+			 WHERE p.idproduct = t.idproduct AND 
+				   t.cdlanguage = UPPER(:cdlanguage) AND
+				 ( t.nmproduct LIKE :search OR 
+				   t.dsproductred LIKE :search OR 
+				   t.dsproductext LIKE :search ) 
+		  ORDER BY t.nmproduct ASC
+		     LIMIT 0,
+		     	   9;
+		", 
+			array(
+			":cdlanguage"=>$this->getLanguage(),
+			":search"=>"%".$search."%"
+		));
 
 		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal;");
 
 		return [
-			'data'=>$results,
-			'total'=>(int)$resultTotal[0]['nrtotal'],
-			'pages'=>ceil($resultTotal[0]['nrtotal'] / $itemPerPage)
+			"data"=>$results,
+			"total"=>(int)$resultTotal[0]["nrtotal"],
+			"pages"=>ceil($resultTotal[0]["nrtotal"] / $itemPerPage)
 		];
 
 	}

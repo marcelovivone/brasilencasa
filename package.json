@@ -19,6 +19,7 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "bootstrap": "^4.1.1",
+    "card-js": "^1.0.13",
     "form-serializer": "^2.5.0",
     "jquery": "^3.3.1",
     "npm-reinstall": "^1.2.1",

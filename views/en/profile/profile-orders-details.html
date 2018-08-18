@@ -44,65 +44,64 @@
 			</div>
 
 			<div class="col-md-9 field">
-					<table class="table ">
-						<thead>
-							<tr>
-								<th scope="col">Product</th>
-								<th scope="col" class="number">Price</th>
-								<th scope="col" class="number">Quantity</th>
-								<th scope="col" class="number">Total</th>
-							</tr>
-						</thead>
-						<tbody>
-							{loop="$products"}
-							<tr>
-								<td>
-									<span>{$value.nmproduct}</span>
-								</td>
-								<td class="number">
-									<span>{function="formatEU($value.vlprice)"} €</span>
-								</td>
-								<td class="number">
-									<span>{$value.nrquantity}</span>
-								</td>
-								<td class="number">
-									<span>{function="formatEU($value.vlprice * $value.nrquantity)"} €</span>
-								</td>
-							</tr>
-							{/loop}
-						</tbody>
-						<tfoot>
-							<tr>
-								<th><span>Total before Shipping & Handling</span></th>
-								<td></td>
-								<td class="number"><span>{$cart.nrsubtotalquantity}</span></td>
-								<td class="number"><span>{function="formatEU($cart.vlsubtotal)"} €</span></td>
-							</tr>
-							<tr class="shipping">
-								<th><span>Shipping & Handling</span></th>
-								<td></td>
-								<td></td>
-								<td class="number">
-									<span>{function="formatEU($cart.vlfreight)"} €</span>
-									<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
-								</td>
-							</tr>
-							<tr class="order-total">
-								<th><span>Total for This Order</span></th>
-								<td></td>
-								<td></td>
-								<td class="number"><strong><span class="amount">{function="formatEU($cart.vltotal)"} €</span></strong></td>
-							</tr>
-						</tfoot>
-					</table>
-					<div id="payment">
-						<div class="form-row place-order">
-							<div class="col-12 d-flex justify-content-center">
-								<input type="submit" value="Print" class="btn btn-common col-3" onclick="window.print()">
-							</div>
+				<table class="table ">
+					<thead>
+						<tr>
+							<th scope="col">Product</th>
+							<th scope="col" class="number">Price</th>
+							<th scope="col" class="number">Quantity</th>
+							<th scope="col" class="number">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						{loop="$products"}
+						<tr>
+							<td>
+								<span>{$value.nmproduct}</span>
+							</td>
+							<td class="number">
+								<span>{function="formatEU($value.vlprice)"} €</span>
+							</td>
+							<td class="number">
+								<span>{$value.nrquantity}</span>
+							</td>
+							<td class="number">
+								<span>{function="formatEU($value.vlprice * $value.nrquantity)"} €</span>
+							</td>
+						</tr>
+						{/loop}
+					</tbody>
+					<tfoot>
+						<tr>
+							<th><span>Total before Shipping & Handling</span></th>
+							<td></td>
+							<td class="number"><span>{$cart.nrsubtotalquantity}</span></td>
+							<td class="number"><span>{function="formatEU($cart.vlsubtotal)"} €</span></td>
+						</tr>
+						<tr class="shipping">
+							<th><span>Shipping & Handling</span></th>
+							<td></td>
+							<td></td>
+							<td class="number">
+								<span>{function="formatEU($cart.vlfreight)"} €</span>
+								<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
+							</td>
+						</tr>
+						<tr class="order-total">
+							<th><span>Total for This Order</span></th>
+							<td></td>
+							<td></td>
+							<td class="number"><strong><span class="amount">{function="formatEU($cart.vltotal)"} €</span></strong></td>
+						</tr>
+					</tfoot>
+				</table>
+				<div id="payment">
+					<div class="form-row place-order">
+						<div class="col-12 d-flex justify-content-center">
+							<input type="submit" value="Print" class="btn btn-common col-2" onclick="window.print()">
 						</div>
 					</div>
-
+				</div>
 			</div>
 		</div>
 	</div>

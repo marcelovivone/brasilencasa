@@ -39,30 +39,48 @@ function submitForm() {
 					<div id="error-message"></div>
 				</div>
 
-				<form action="" method="post" role="form" class="form-inline contact-form" id="contact-form">
+				<form action="" method="post" role="form" class="form contact-form" id="contact-form">
 					<div class="section-header" style="padding-left: 15px">
 						<h2>Contact Us</h2>
 						<p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
 					</div>
 
-					<div class="form-group col-12 col-md-6">
-						<input type="text" name="name" class="form-control col-12" id="name" placeholder="Your Name"/>
-					</div>
+					<div class="container">
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-6 labelled-div-input first-column">
+										<input type="text" class="form-control labelled-input" id="name" name="name">
+										<label for="name">Your Name*</label>
+								</div>
 
-					<div class="form-group col-12 col-md-6">
-						<input type="email" class="form-control col-12" name="email" id="email" placeholder="Email Address"/>
-					</div>
+								<div class="col-6 labelled-div-input second-column">
+										<input type="email" class="form-control labelled-input" id="email" name="email">
+										<label for="name">Your Email*</label>
+								</div>
+							</div>
+						</div>
 
-					<div class="form-group col-12">
-						<input type="text" class="form-control col-12" name="subject" id="subject" placeholder="Subject"/>
-					</div>
+						<div class="form-group input-group">
+							<div class="row no-gutters input-group">
+								<div class="col-12 labelled-div-input">
+									<input type="text" class="form-control labelled-input" id="subject" name="subject">
+									<label for="subject">Subject*</label>
+								</div>
+							</div>
+						</div>
 
-					<div class="form-group col-12">
-						<textarea class="form-control col-12" name="message" id="message" rows="5" data-rule="required" data-msg="Please write something for us." placeholder="Message"></textarea>
-					</div>
+						<div class="form-group textarea-group">
+							<div class="row no-gutters textarea-group">
+								<div class="col-12 labelled-div-textarea">
+									<textarea type="text" class="form-control labelled-textarea" name="message" id="message" rows="5" data-msg="Please write something for us."></textarea>
+									<label for="message">Message*</label>
+								</div>
+							</div>
+						</div>
 			
-					<div class="col-12 d-flex justify-content-center">
-						<button type="button" class="btn btn-common col-6" onclick="submitForm()">Send Message</button>
+						<div class="col-12 d-flex justify-content-center">
+							<button type="button" class="btn btn-common col-2" onclick="submitForm()">Send Message</button>
+						</div>
 					</div>
 				</form>
 			</div>

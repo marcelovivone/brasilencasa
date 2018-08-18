@@ -34,6 +34,9 @@ class Page
 				2: TPL header archive directory
 				3: Menu array
 				4: Route for HTML link action
+				5: Current cart register
+				6: Current cart products register
+				7: Search input typed by user
 		*/
 
 		$this->options = array_merge($this->defaults, $opts);
@@ -60,10 +63,11 @@ class Page
 //			$this->tpl->draw("header");
 			if ($this->options["header"]["args"] === true) {
 				$this->setTpl($opts[0], [
-					'menu'=>$opts[3],
-					'route'=>$opts[4],
-					'cart'=>$opts[5],
-					'cartProducts'=>$opts[6]
+					"menu"=>$opts[3],
+					"route"=>$opts[4],
+					"cart"=>$opts[5],
+					"cartProducts"=>$opts[6],
+					"searchFilter"=>$opts[7]
 				]);
 			} else {
 				$this->tpl->draw("header");

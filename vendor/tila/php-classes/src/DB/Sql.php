@@ -64,7 +64,27 @@ class Sql {
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 	}
+/*
+	public function prepare($rawQuery, $params = array())
+	{
+		
+		$stmt = $this->conn->prepare($rawQuery);
 
+		$this->setParams($stmt, $params);
+		
+		$stmt->execute();
+
+		return $stmt;
+
+	}
+
+	public function fetch($stmt): array
+	{
+		
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+	}
+*/
 }
 
 ?>

@@ -152,15 +152,18 @@
 		<!-- Appear -->
 		<script src="/assets/js/jquery.appear.js"></script>
 		<script src="/assets/js/jquery.vide.js"></script>
-		<!-- All JS plugin Triggers -->
-		<script src="/assets/js/main.js"></script>
 
 		<!-- Form Validator -->
-<!--		<script src="/assets/js/jquery.validate.min.js"></script> -->
 		<script src="/assets/js/jquery.validate-1.17.1-pre.js"></script>
 		<script src="/assets/js/additional-methods.min.js"></script>
 
+		<!-- Credit Card Validator -->
+		<script src="/assets/js/card-js.min.js"></script>
+
 		<!-- Contact Form JavaScript File -->
 		<script src="/assets/js/contact/contactform.js"></script>
+
+		<!-- All JS plugin Triggers -->
+		<script src="/assets/js/main.js"></script>
 	</body>
 </html>

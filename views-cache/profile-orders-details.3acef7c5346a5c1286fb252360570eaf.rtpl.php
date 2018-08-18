@@ -45,67 +45,66 @@
 			</div>
 
 			<div class="col-md-9 field">
-					<table class="table ">
-						<thead>
-							<tr>
-								<th scope="col">Product</th>
-								<th scope="col" class="number">Price</th>
-								<th scope="col" class="number">Quantity</th>
-								<th scope="col" class="number">Total</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
+				<table class="table ">
+					<thead>
+						<tr>
+							<th scope="col">Product</th>
+							<th scope="col" class="number">Price</th>
+							<th scope="col" class="number">Quantity</th>
+							<th scope="col" class="number">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 
-							<tr>
-								<td>
-									<span><?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
-								</td>
-								<td class="number">
-									<span><?php echo formatEU($value1["vlprice"]); ?> €</span>
-								</td>
-								<td class="number">
-									<span><?php echo htmlspecialchars( $value1["nrquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
-								</td>
-								<td class="number">
-									<span><?php echo formatEU($value1["vlprice"] * $value1["nrquantity"]); ?> €</span>
-								</td>
-							</tr>
-							<?php } ?>
+						<tr>
+							<td>
+								<span><?php echo htmlspecialchars( $value1["nmproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
+							</td>
+							<td class="number">
+								<span><?php echo formatEU($value1["vlprice"]); ?> €</span>
+							</td>
+							<td class="number">
+								<span><?php echo htmlspecialchars( $value1["nrquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
+							</td>
+							<td class="number">
+								<span><?php echo formatEU($value1["vlprice"] * $value1["nrquantity"]); ?> €</span>
+							</td>
+						</tr>
+						<?php } ?>
 
-						</tbody>
-						<tfoot>
-							<tr>
-								<th><span>Total before Shipping & Handling</span></th>
-								<td></td>
-								<td class="number"><span><?php echo htmlspecialchars( $cart["nrsubtotalquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span></td>
-								<td class="number"><span><?php echo formatEU($cart["vlsubtotal"]); ?> €</span></td>
-							</tr>
-							<tr>
-								<th><span>Shipping & Handling</span></th>
-								<td></td>
-								<td></td>
-								<td class="number">
-									<span><?php echo formatEU($cart["vlfreight"]); ?> €</span>
-									<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
-								</td>
-							</tr>
-							<tr class="order-total">
-								<th><span>Total for This Order</span></th>
-								<td></td>
-								<td></td>
-								<td class="number"><strong><span class="amount"><?php echo formatEU($cart["vltotal"]); ?> €</span></strong></td>
-							</tr>
-						</tfoot>
-					</table>
-					<div id="payment">
-						<div class="form-row place-order">
-							<div class="col-12 d-flex justify-content-center">
-								<input type="submit" value="Print" class="btn btn-common col-3" onclick="window.print()">
-							</div>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th><span>Total before Shipping & Handling</span></th>
+							<td></td>
+							<td class="number"><span><?php echo htmlspecialchars( $cart["nrsubtotalquantity"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span></td>
+							<td class="number"><span><?php echo formatEU($cart["vlsubtotal"]); ?> €</span></td>
+						</tr>
+						<tr class="shipping">
+							<th><span>Shipping & Handling</span></th>
+							<td></td>
+							<td></td>
+							<td class="number">
+								<span><?php echo formatEU($cart["vlfreight"]); ?> €</span>
+								<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
+							</td>
+						</tr>
+						<tr class="order-total">
+							<th><span>Total for This Order</span></th>
+							<td></td>
+							<td></td>
+							<td class="number"><strong><span class="amount"><?php echo formatEU($cart["vltotal"]); ?> €</span></strong></td>
+						</tr>
+					</tfoot>
+				</table>
+				<div id="payment">
+					<div class="form-row place-order">
+						<div class="col-12 d-flex justify-content-center">
+							<input type="submit" value="Print" class="btn btn-common col-2" onclick="window.print()">
 						</div>
 					</div>
-
+				</div>
 			</div>
 		</div>
 	</div>

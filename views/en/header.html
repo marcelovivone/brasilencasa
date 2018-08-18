@@ -1,3 +1,74 @@
+<script>
+function submitHeaderForm(form) {
+	form.method = 'post';
+
+	let searchString = document.getElementById('top_search').value;
+	if (searchString === '') {
+		form.action = '/en/products';
+	} else {
+		form.action = `/en/products/catalogsearch/${searchString}`;
+	}
+
+	$(form).submit();
+}
+
+function keyPress(form, value) {
+
+	if (event.keyCode === 13) {
+		if (value !== '') {
+			submitHeaderForm(form);
+		}
+		event.preventDefault();
+	}
+}
+
+function keyUp(value) {
+
+//	if (value.length <= 2) { 
+	if (value.length === 0) { 
+		document.getElementById("livesearchdropdown").style.display = 'none';
+		document.getElementById("livesearch").style.display = 'none';
+		document.getElementById("livesearch").innerHTML = '';
+		return;
+	}
+
+ 	// AJAX is called.
+	$.ajax({
+		type: "POST",
+		url: `/en/products/livesearch/${value}`,
+ 		data: {
+			search: value,
+			language: 'EN'
+		},
+ 
+		// If result found
+		success: function(html) {
+
+			if (html === '') {
+				document.getElementById("livesearchdropdown").style.display = 'none';
+				document.getElementById("livesearch").style.display = 'none';
+				document.getElementById("livesearch").innerHTML = '';
+			} else {
+				document.getElementById("livesearch").innerHTML = html;
+				document.getElementById("livesearch").style.display = 'block';
+				document.getElementById("livesearchdropdown").style.display = 'block';
+			}
+ 		}
+
+	});
+}
+
+function submitSearchForm() {
+	let form = document.getElementById('formHeader');
+	let el = document.getElementById('top_search');
+
+	form.method = 'post';
+	form.action = `/en/products/catalogsearch/${el.value}`;
+
+	$(form).submit();
+}
+</script>
+
 <!-- DOCTYPE -->
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +105,10 @@
 		<link rel="stylesheet" type="text/css" href="/assets/extras/normalize.css">
 		<link rel="stylesheet" type="text/css" href="/assets/extras/settings.css">
 
-		<!-- Color CSS Styles  -->
+		<!-- Credit Card Validator -->
+		<link rel="stylesheet" type="text/css" href="/assets/css/card-js.min.css">
+
+		<!-- Color CSS Styles -->
 		<link rel="stylesheet" type="text/css" href="/assets/css/colors/greensea.css" media="screen" />       
 	</head>
 
@@ -179,6 +253,7 @@
 											All
 										</a>
 									</li>
+<!--
 									<div class="top_search d-lg-none">
 										<div class="top_search_con">
 											<span class="top_search_icon"><i class="icon-magnifier"></i></span>
@@ -186,16 +261,26 @@
 											<input class="top_search_submit" type="submit">
 										</div>
 									</div>
+-->
 								</ul>
 							</div>
-		
+
 							<div class="top_search d-none d-lg-block col-lg-3 ml-lg-4 pl-lg-0 pr-lg-0">
 								<div class="top_search_con">
-									<input class="s" placeholder="Search Here ..." type="text">
+									<input class="s" placeholder="Search Here ..." type="text" id="top_search" onkeypress="keyPress(this.form, this.value)" onkeyUp="keyUp(this.value)" autocomplete="off" value="{$searchFilter}">
 									<span class="top_search_icon"><i class="icon-magnifier"></i></span>
-									<input class="top_search_submit" type="submit">
+									<input class="top_search_submit" type="button" onclick="submitHeaderForm(this.form)">
 								</div>
+
+								<ul class="navbar-nav nav-inline" id="navbar-nav">
+									<li class="nav-item dropdown">
+										<div class="dropdown-menu" id="livesearchdropdown">
+											<div id="livesearch"></div>
+										</div>
+									</li>
+								</ul>
 							</div>
+
 							{if="checkLogin(false)"}
 							<div class="shopping-item ml-4">
 								<ul class="navbar-nav nav-inline" id="navbar-nav">
